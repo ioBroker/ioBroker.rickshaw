@@ -1,0 +1,17 @@
+{
+    "common": {
+        "name":                     "rickshaw",
+        "version":                  "0.0.0",
+        "title":                    "Rickshaw Charts",
+        "desc":                     "draw charts with rickshaw",
+        "platform":                 "javascript/Node.js",
+        "mode":                     "none",
+        "loglevel":                 "info",
+        "dependencies":             "websocket"
+    },
+    "native": {
+
+    },
+    "objects": [
+    ]
+}
