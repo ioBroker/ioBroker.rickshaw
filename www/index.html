@@ -1,76 +1,125 @@
-<!doctype html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-<link rel="stylesheet" href="rickshaw.min.css">
+    <link type="text/css" rel="stylesheet" href="lib/css/rickshaw.min.css">
+	<link type="text/css" rel="stylesheet" href="lib/css/lines.css">
+	<link type="text/css" rel="stylesheet" href="lib/css/redmond/jquery-ui.css">
 
-<script src="jquery-1.11.1.min.js"></script>
-<script src="../socket.io/socket.io.js"></script>
-<script src="d3.min.js"></script>
-<script src="rickshaw.min.js"></script>
-
-<style>
-    #chart_container {
-        position: relative;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    #chart {
-        position: relative;
-        left: 40px;
-    }
-    #y_axis {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 40px;
-    }
-</style>
-
-<h3 id="name"></h3>
+	<script src="lib/js/jquery-1.11.1.min.js"></script>
+	<script src="lib/js/jquery-ui-1.10.3.full.min.js"></script><!-- todo replace it with only slider -->
+	<script src="lib/js/d3.v3.js"></script>
+	<script src="lib/js/rickshaw.min.js"></script>
+    <script src="lib/js/socket.io.js"></script>
+	<style>
+		.rickshaw_graph .x_tick.invisible {
+			border-left: 0px rgba(0, 0, 0, 0) !important;
+		}
+		#title {
+			font-size: 24px;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
 
 <div id="chart_container">
-    <div id="y_axis"></div>
-    <div id="chart"></div>
+	<!--div id="legend_container">
+		<div id="smoother" title="Smoothing"></div>
+		<div id="legend"></div>
+	</div-->
+	<div id="y_axis_1" style="position: absolute;top: 0;bottom: 0;width: 40px;"></div>
+	<div id="chart"></div>
+	<div id="y_axis_2" style="position: absolute;top: 0;bottom: 0;width: 40px;"></div>
+	<div id="preview" style='display:none'></div>
+	<div id="legend" style="position:absolute"></div>
+	<div id="title" style="position:absolute"></div>
 </div>
 
 <script>
-    var id = 'hm-rpc.0.KEQ0175982:1.TEMPERATURE';
+var graph;
 
+var backgrounds = [
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,#87e0fd), color-stop(40%,#53cbf1), color-stop(100%,#05abe0))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f9ff), color-stop(47%,#cbebff), color-stop(100%,#a1dbff))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(254,252,234,1)), color-stop(100%,rgba(241,218,54,1)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(205,235,142,1)), color-stop(100%,rgba(165,201,86,1)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(238,238,238,1)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(228,239,192,1)), color-stop(100%,rgba(171,189,115,1)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(249,198,103,1)), color-stop(100%,rgba(247,150,33,1)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(254,255,232,1)), color-stop(100%,rgba(214,219,191,1)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,255,244,1)), color-stop(40%,rgba(223,229,215,1)), color-stop(100%,rgba(179,190,173,1)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(241,231,103,1)), color-stop(100%,rgba(254,182,69,1)))'
+];
 
-    var socket = io.connect();
+var config = {
+	_colors:   ["#c05020", "#30c020", "#6060c0"],
+	_units:    [],
+	_names:    [],
+	offset:   'zero',
+	stack:    false
+}
 
-    var graph;
-    var data = [];
+// Analyse query
+var path = location.href;
+path = path.split('?');
+if (path.length > 1) {
+	path = path[1].split('&');
+	for (var i = 0; i < path.length; i++) {
+		var parts = path[i].split('=');
+		config[parts[0]] = (parts[1] !== undefined) ? unescape(parts[1]) : true;
+		if (parts[0][0] == '_') config[parts[0]] = unescape(config[parts[0]]).split(';');
+	}
+}
 
-    socket.on('stateChange', function (changeId, state) {
-        if (changeId === id) {
-            data.push({x: state.ts, y: state.val});
+var seriesData = [];
+
+// set up our data series with random data points
+/*for (var i = 0; i < range; i++) {
+	random.addData(seriesData);
+}
+
+for (var i = 0; i < range; i++) {
+	seriesData[0][i].y = Math.sin(3.14159265 / range * i) * 150;
+}*/
+//var socket = io.connect();
+
+var url = 'http://' + location.hostname + ':8084';
+
+var socket = io.connect(url, {
+//    'query': 'key=' + socketSession,
+    'reconnection limit': 10000,
+    'max reconnection attempts': Infinity
+});
+
+socket.on('stateChange', function (changeId, state) {
+    for (j = 0; j < config._ids.length; j++) {
+        if (config._ids[j] == changeId) {
+            seriesData[j].push({x: state.ts, y: state.val});
             graph.update();
-            console.log('update!');
+            break;
         }
-    });
+    }
+});
 
+function readOneChart(id, index, callback) {
     socket.emit('getObject', id, function (err, res) {
-        var name = id;
-        var unit = '';
-
         if (!err && res.common) {
-            name = res.common.name;
-            unit = res.common.unit;
+            config._names[index] = config._names[index] || res.common.name;
+            config._units[index] = res.common.unit.replace('�', '°');
+        } else {
+            config._names[index] = config._names[index] || id;
+            config._units[index] = '';
         }
-
-
-        $('#name').html(name);
+        socket.emit('subscribe', id);
 
         socket.emit('getStateHistory', id, function (err, res) {
-            console.log(err, res);
-
-
-
-
-            for (var i = res.length - 1; i >= 0; i--) {
-                data.push({x: res[i].ts, y: res[i].val});
+            if (!err && res) {
+                for (var i = res.length - 1; i >= 0; i--) {
+                    seriesData[index].push({x: res[i].ts, y: res[i].val});
+                }
             }
-
-            console.log(data);
+            if (callback) callback(id, index);
+            /*console.log(data);
 
             graph = new Rickshaw.Graph( {
                 element: document.querySelector("#chart"),
@@ -110,13 +159,319 @@
 
 
 
-            graph.render();
+            graph.render();*/
 
         });
 
     });
+}
+
+function readData() {
+    if (config._ids) {
+        var _ids = [];
+        for (var j = 0; j < config._ids.length; j++) {
+            if (config._ids[j] !== '' && config._ids[j] !== undefined) {
+                seriesData.push([]);
+                _ids.push(config._ids[j]);
+            }
+        }
+        config._ids = _ids;
+        for (j = 0; j < config._ids.length; j++) {
+            readOneChart(config._ids[j], j, function (_id, _index) {
+                if (_index == config._ids.length - 1) {
+                    buildGraph();
+                }
+            });
+        }
+    } else {
+        var random = new Rickshaw.Fixtures.RandomData(150);
+        var range  = config.range || 150;
+
+        seriesData.push([]);
+        // set up our data series with random data points
+        for (var i = 0; i < range; i++) {
+            random.addData(seriesData);
+        }
+
+        for (var i = 0; i < range; i++) {
+           seriesData[0][i].y = Math.sin(3.14159265 / range * i) * 150;
+        }
+    }
+}
+
+function buildGraph() {
+    if (config.palette) {
+        config.palette = new Rickshaw.Color.Palette( { scheme: config.palette } );
+    } else if (!config._colors && !config.palette) {
+        config.palette = new Rickshaw.Color.Palette( { scheme: 'cool' } );
+    }
+
+    var series = [];
+    for (var i = seriesData.length - 1; i >= 0; i--) {
+        series.push({
+            color: config.palette ? config.palette.color() : (config._colors[i] || 'black'),
+            data: seriesData[i],
+            name: (config._names ? config._names[i] : '') || ('Line ' + config._ids[i])
+        });
+    }
+
+    config.element     = document.getElementById("chart");
+    config.series      = series;
+
+// Set default values
+    config.renderer    = config.renderer || 'line';
+    config.width       = config.width    || 960;
+    config.height      = config.height   || 500;
+    config.left        = 0;
+    config.timeFormat  = config.timeFormat || "%H:%M:%S %e.%m.%y";
+    config._units      = config._units || [];
+    config.useComma    = (config.useComma   === undefined) ? true: config.useComma;
+    config.afterComma  = (config.afterComma === undefined) ? 2: config.afterComma;
+    config.timeFixture =  new Rickshaw.Fixtures.Time.Local()
+// Replace background
+    if (config.bg && config.bg.length < 3 && backgrounds[config.bg]) config.bg = backgrounds[config.bg];
+
+    if (config.bg) {
+        $('body').css({background: config.bg});
+    }
+
+// instantiate our graph!
+    graph = new Rickshaw.Graph(config);
+    graph.render();
+
+    if (config.hoverDetail && config.hoverDetail !== 'false') {
+        var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+            graph: graph,
+            xFormatter: function(x) {
+                return d3.time.format(config.timeFormat)(new Date(x * 1000));
+            },
+            yFormatter: function(y) {
+                if (config.useComma) {
+                    return y.toFixed(config.afterComma).toString().replace('.', ',');
+                } else {
+                    return y.toFixed(config.afterComma);
+                }
+            }
+        } );
+        // Overwrite formatter to add own units
+        hoverDetail.formatter = function(series, x, y, formattedX, formattedY, d) {
+            var pos = config._names.indexOf(series.name);
+            if (pos != -1 && config._units[pos]) {
+                return series.name + ':&nbsp;' + formattedY + '&nbsp;' + config._units[pos];
+            } else {
+                return series.name + ':&nbsp;' + formattedY;
+            }
+        };
+    }
+
+    if (config.legend) {
+        var legend = new Rickshaw.Graph.Legend( {
+            graph: graph,
+            element: document.getElementById('legend')
+        } );
+
+        var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+            graph:  graph,
+            legend: legend
+        } );
+
+        var parts = config.legend.split(';');
+        var css = {};
+        for(var t = 0; t < parts.length; t++) {
+            var p = parts[t].split(':');
+            // Bottom inside
+            if (p[0] == 'bottom' && p[1] == '5')  {
+                css.top = config.height - $('#legend').height() - 24 - 5;  // Padding 12
+            } else	// Bottom outside
+            if (p[0] == 'bottom' && p[1] == '-5') {
+                css.top = config.height + 5;
+            } else	// Middle
+            if (p[0] == 'top'    && p[1] == '50') {
+                css[p[0]] = (config.height - $('#legend').height() - 24) / 2;
+            } else	// Center
+            if (p[0] == 'left'   && p[1] == '50') {
+                css[p[0]] = (config.width - $('#legend').width() - 24) / 2;
+            } else	// Right inside
+            if (p[0] == 'right'  && p[1] == '5')  {
+                css.left  = config.width - $('#legend').width() - 24 - 5;
+            } else	// Right outside
+            if (p[0] == 'right'  && p[1] == '-5')  {
+                css.left  = config.width + 5;
+            } else	{
+                css[p[0]] = p[1];
+            }
+        };
+        $('#legend').css(css);
+    }
+
+    if (config.title) {
+        $('#title').html(unescape(config.title));
+        if (config.title_pos) {
+            var parts = config.title_pos.split(';');
+            var css = {}
+            for(var t = 0; t < parts.length; t++) {
+                var p = parts[t].split(':');
+                // Bottom inside
+                if (p[0] == 'bottom' && p[1] == '5')  {
+                    css.top = config.height - $('#title').height() - 5;
+                } else	// Bottom outside
+                if (p[0] == 'bottom' && p[1] == '-5') {
+                    css.top = config.height + 5;
+                } else	// Middle
+                if (p[0] == 'top'    && p[1] == '50') {
+                    css[p[0]] = (config.height - $('#title').height()) / 2;
+                } else	// Center
+                if (p[0] == 'left'   && p[1] == '50') {
+                    css[p[0]] = (config.width - $('#title').width()) / 2;
+                } else	// Right inside
+                if (p[0] == 'right'  && p[1] == '5')  {
+                    css.left  = config.width - $('#title').width() - 5;
+                } else	// Right outside
+                if (p[0] == 'right'  && p[1] == '-5')  {
+                    css.left  = config.width + 5;
+                } else	{
+                    css[p[0]] = p[1];
+                }
+            };
+            $('#title').css(css);
+        }
+    }
+
+    if (config.axeX) {
+        var format = function(d) {
+            d = new Date(d);
+            return d3.time.format("%c")(d);
+        }
+
+        if (config.axeX == "lines") {
+            var xAxis = new Rickshaw.Graph.Axis.Time( {
+                graph: graph,
+                ticksTreatment: 'glow',
+                //tickFormat: format,
+                timeFixture: new Rickshaw.Fixtures.Time.Local()
+            } );
+            xAxis.render();
+
+        } else if (config.axeX == "nolines"){
+            var xAxis = new Rickshaw.Graph.Axis.Time( {
+                graph: graph,
+                ticksTreatment: 'invisible',
+                //tickFormat: format,
+                timeFixture: new Rickshaw.Fixtures.Time.Local()
+            } );
+            xAxis.render();
+        }
+    }
+
+    if (config.axeY) {
+        var ticksTreatment = 'glow';
+
+        if (config.axeY.indexOf('inside') != -1) {
+            var yAxis1 = new Rickshaw.Graph.Axis.Y( {
+                graph: graph,
+                tickFormat: function(y) {
+                    return y.toString().replace('.', ',');
+                },
+                ticksTreatment: ticksTreatment
+            } );
+
+            yAxis1.render();
+            if (config.axeY.indexOf('nolines') != -1) $('.y_grid').hide();
+            if (config._units[0]) $('#chart').append('<div style="position:absolute; top:0; left: 5">' + config._units[0] + '</div>');
+
+        } else if (config.axeY.indexOf('outside') != -1) {
+            var yAxis1 = new Rickshaw.Graph.Axis.Y( {
+                graph: graph,
+                tickFormat: function(y) {
+                    return y.toString().replace('.', ',');
+                },
+                ticksTreatment: ticksTreatment,
+                orientation: 'left',
+                element: document.getElementById('y_axis_1')
+            } );
+
+            yAxis1.render();
+            config.left += 40;
+            $('#chart').css({left: config.left});
+            if (config.axeY.indexOf('nolines') != -1) $('.y_grid').hide();
+
+            if (config._units[0]) $('#y_axis_1').append('<div style="position:absolute; top:0; right: 5">' + config._units[0] + '</div>');
+        }
+    }
+
+    if (config.axeY2) {
+        var ticksTreatment = 'glow';
+
+        if (config.axeY2.indexOf('inside') != -1) {
+            var yAxis2 = new Rickshaw.Graph.Axis.Y( {
+                graph: graph,
+                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                ticksTreatment: ticksTreatment,
+                grid:false,
+                orientation: 'left',
+                element: document.getElementById('y_axis_2')
+            } );
+
+            yAxis2.render();
+            $('#y_axis_2').css({left: config.left + config.width - 40});
+            if (config.axeY2.indexOf('nolines') != -1) {
+                $('.y_grid').last().hide();
+            }
+
+            if (config._units[1]) $('#y_axis_2').append('<div style="position:absolute; top:0; width: 100%; text-align:center">' + config._units[1] + '</div>');
+
+        } else if (config.axeY2.indexOf('outside') != -1) {
+            var yAxis2 = new Rickshaw.Graph.Axis.Y( {
+                graph: graph,
+                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                ticksTreatment: ticksTreatment,
+                orientation: 'right',
+                grid:false,
+                element: document.getElementById('y_axis_2')
+            } );
+
+            yAxis2.render();
+            if (config.axeY2.indexOf('nolines') != -1) {
+                $('.y_grid').last().hide();
+            }
+            $('#y_axis_2').css({left: config.left + config.width});
+            if (config._units[1]) $('#y_axis_2').append('<div style="position:absolute; top:0; width: 100%; text-align:center">' + config._units[1] + '</div>');
+        }
+    }
+
+    if (config.smoothing > 0) {
+        var smoother = new Rickshaw.Graph.Smoother( {
+            graph: graph
+        } );
+        smoother.setScale(config.smoothing);
+    }
+
+    if (config.preview && config.preview !== 'false') {
+        $p = $('#preview').show();
+        var preview = new Rickshaw.Graph.RangeSlider( {
+            graph: graph,
+            element: $p[0]
+        } );
+
+        /*var previewXAxis = new Rickshaw.Graph.Axis.Time({
+         graph: preview.previews[0],
+         timeFixture: new Rickshaw.Fixtures.Time.Local(),
+         ticksTreatment: ticksTreatment
+         });
+
+         previewXAxis.render();		*/
+    }
+
+    if (config.annotate && config.annotate !== 'false') {
+        var annotator = new Rickshaw.Graph.Annotate( {
+            graph: graph,
+            element: document.getElementById('timeline')
+        } );
+    }
+}
 
 
-
-
+readData();
 </script>
+
+</body>

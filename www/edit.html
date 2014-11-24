@@ -1,0 +1,317 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<!--script src="lib/js/jquery-1.11.1.min.js"></script-->
+	<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+	<style>
+		.input {
+			width: 150;
+		}
+		.label {
+			width: 150;
+		}
+		.ui-widget input {
+			font-size: 14px;
+		}
+	</style>
+</head>
+<body>
+	<table style="vertical-align:top"><tr>
+		<th class="translate">Input data</th>
+		<th class="translate">Legend and Axes</th>
+		<th class="translate">Names</th>
+		<th class="translate">Colors</th>
+		<th class="translate">Options</th>
+	</tr>
+	<tr>
+		<td class="input-data" style="vertical-align:top"><table>
+			<tr><td class="translate label">Datapoints:</td><td><input id="ids_count"/></td></tr>
+			<tr><td colspan="2"><table id="idslist"></table></td></tr>
+			<tr><td class="translate">Range:</td><td><select id="range" class="value input">
+				<option value="10"      class="translate">10 Minutes</option>
+				<option value="30"      class="translate">30 Minutes</option>
+				<option value="60"      class="translate">1 Hour</option>
+				<option value="120"     class="translate">2 Hours</option>
+				<option value="180"     class="translate">3 Hours</option>
+				<option value="360"     class="translate">6 Hours</option>
+				<option value="720"     class="translate">12 Hours</option>
+				<option value="1440"    class="translate">1 Day</option>
+				<option value="2880"    class="translate">2 Days</option>
+				<option value="4320"    class="translate">3 Days</option>
+				<option value="10080"   class="translate">7 Days</option>
+				<option value="20160"   class="translate">14 Days</option>
+				<option value="43200"   class="translate">1 Month</option>
+				<option value="86400"   class="translate">2 Months</option>
+				<option value="129600"  class="translate">3 Months</option>
+				<option value="259200"  class="translate">6 Months</option>
+				<option value="525600"  class="translate">1 Year</option>
+				<option value="1051200" class="translate">2 Years</option>
+			</select></td></tr>
+			<tr><td class="translate">Width:</td><td> <input id="width"    class="value input"></td></tr>
+			<tr><td class="translate">Height:</td><td><input id="height"   class="value input"></td></tr>
+			<tr><td class="translate">Chart type:</td><td><select id="renderer" class="value input">
+				<option value="line"        class="translate">Line</option>
+				<option value="area"        class="translate">Area</option>
+				<option value="bar"         class="translate">Bar</option>
+				<option value="lineplot"    class="translate">Line plot</option>
+				<option value="scatterplot" class="translate">Scatter plot</option>
+				<option value="stack"       class="translate">Stack</option>
+			</select></td></tr>
+		</table></td>
+		<td class="axes" style="vertical-align:top"><table>
+			<tr><td class="translate label">Show axis bottom:</td><td><select class="value input" id="axeX">
+				<option value="" class="translate">none</option>
+				<option value="lines">With lines</option>
+				<option value="nolines">Without lines</option>
+			</select></td></tr>	
+			<tr><td class="translate">Show axis left:</td><td><select class="value input" id="axeY">
+				<option value="" class="translate">none</option>
+				<option value="inside">Inside / With lines</option>
+				<option value="outside">Outside/ With lines</option>
+				<option value="inside nolines">Inside / No lines</option>
+				<option value="outside nolines">Outside / No lines</option>
+			</select></td></tr>
+			<tr><td class="translate">Show axis right:</td><td><select class="value input" id="axeY2">
+				<option value="" class="translate">none</option>
+				<option value="inside nolines">Inside / No lines</option>
+				<option value="outside nolines">Outside / No lines</option>
+				<option value="inside">Inside / With lines</option>
+				<option value="outside">Outside/ With lines</option>
+			</select></td></tr>
+			<tr><td class="translate">Show legend:</td><td>  <select class="value input" id="legend">
+				<option value="" class="translate">none</option>
+				<option value="top:5;left:5">Top, left, inside</option>
+				<option value="top:5;right:5">Top, right, inside</option>
+				<option value="top:5;left:50">Top, center, inside</option>
+				<option value="top:50;left:5">Middle, left, inside</option>
+				<option value="top:50;right:5">Middle, right, inside</option>
+				<option value="bottom:5;left:5">Bottom, left, inside</option>
+				<option value="bottom:5;right:5">Bottom, right, inside</option>
+				<option value="bottom:5;left:50">Bottom, center, inside</option>
+				
+				<option value="top:5;right:-5">Top, right, outside</option>
+				<option value="top:50;right:-5">Middle, right, outside</option>
+				<option value="bottom:5;right:-5">Bottom, right, outside</option>
+				<option value="bottom:-5;left:50">Bottom, center, outside</option>
+			</select></td></tr>
+			<tr><td class="translate">Title:</td><td> <input type="text" id="title" class="value input"></td></tr>
+			<tr><td class="translate">Title position:</td><td>  <select class="value input" id="title_pos">
+				<option value="" class="translate">none</option>
+				<option value="top:5;left:5">Top, left, inside</option>
+				<option value="top:5;right:5">Top, right, inside</option>
+				<option value="top:5;left:50">Top, center, inside</option>
+				<option value="top:50;left:5">Middle, left, inside</option>
+				<option value="top:50;right:5">Middle, right, inside</option>
+				<option value="bottom:5;left:5">Bottom, left, inside</option>
+				<option value="bottom:5;right:5">Bottom, right, inside</option>
+				<option value="bottom:5;left:50">Bottom, center, inside</option>
+				
+				<option value="top:5;right:-5">Top, right, outside</option>
+				<option value="top:50;right:-5">Middle, right, outside</option>
+				<option value="bottom:5;right:-5">Bottom, right, outside</option>
+				<option value="bottom:-5;left:50">Bottom, center, outside</option>
+			</select></td></tr>
+		</table></td>
+		<td class="names" style="vertical-align:top"><table>
+			<tr><td class="translate label">User defined names:</td><td><input type="checkbox" id="names"></td></tr>
+			<tr><td colspan="2"><table id="nameslist"></table></td></tr>
+		</table></td>
+		<td class="colors" style="vertical-align:top"><table>
+			<tr><td class="translate label">Predefined background:</td><td> <select class="input" id="pre_bg">
+				<option value="" class="translate">User defined</option>
+				<option value="0">Azur</option>
+				<option value="1">Grey-Blue</option>
+				<option value="2">White-yellow</option>
+				<option value="3">Light green</option>
+				<option value="4">Grey</option>
+				<option value="5">Grey-green</option>
+				<option value="6">Orange</option>
+				<option value="7">Light grey-green</option>
+				<option value="8">Dark grey-green</option>
+				<option value="9">Yellow-orange</option>
+			</select></td></tr>
+			<tr><td class="translate label">Background:</td><td> <input type="text" id="bg" class="value input"></td></tr>
+			<tr><td class="translate">Palette:</td><td><select class="value input" id="palette">
+				<option value="" class="translate">User defined</option>
+				<option value="munin">Munin</option>
+				<option value="colorwheel">Colorwheel</option>
+				<option value="classic9">Classic9</option>
+				<option value="spectrum14">Spectrum14</option>
+				<option value="cool">Cool</option>
+				<option value="spectrum2000">Spectrum2000</option>
+				<option value="spectrum2001">Spectrum2001</option>
+			</select></td></tr>
+			<tr><td colspan="2"><table id="colorslist"></table></td></tr>
+		</table></td>
+		<td class="thickness" style="vertical-align:top"><table>
+			<tr><td class="translate">Line thick:</td><td><input type="text" class="value input" id="strokeWidth"></td></tr>
+			<tr><td class="translate">Hover details:</td><td><input type="checkbox" class="value" id="hoverDetail"></td></tr>
+			<tr><td class="translate">Time format:</td><td>  <select class="value input" id="timeFormat">
+				<option value="" class="translate">Default</option>
+				<option value="%H:%M:%S %e.%m.%y">HH:MM:SS dd.mm.yy</option>
+				<option value="%I:%M:%S %x %p">HH:MM:SS mm/dd/yy am (US)</option>
+				<option value="%H:%M:%S %e/%m/%y">HH:MM:SS dd/mm/yy (UK)</option>
+				<option value="%H:%M:%S %m.%e.%y">HH:MM:SS mm.dd.yy</option>
+			</select></td></tr>
+			<tr><td class="translate">Smoothing:</td><td>    <input type="text"     class="value input" id="smoothing"></td></tr>
+			<tr><td class="translate">Preview:</td><td>      <input type="checkbox" class="value" id="preview"></td></tr>
+			<tr><td class="translate">After comma:</td><td>    <input type="text"   class="value input" id="afterComma"></td></tr>
+		</table></td>
+	</tr>
+	<tr><td colspan=5>&nbsp;</td></tr>
+	<tr>
+		<td colspan=5>
+			Link:<input type="text" id="link" style="width:90%">
+		</td>
+	</tr>
+	</table>
+	
+	<table>
+	<!--tr><td class="translate">Stroke:</td><td>       <input type="checkbox" class="value" id="stroke"></td></tr>
+	<tr><td class="translate">Preserve:</td><td>     <input type="checkbox" class="value" id="preserve"></td></tr>
+	<tr><td class="translate">Annotate:</td><td>     <input type="checkbox" class="value" id="annotate"></td></tr-->
+	</table>
+	<hr>
+	<iframe src="index.html" style="width: 100%; bottom: 0; height: 500" id="chart"></iframe>
+	
+	<script>
+		var ids =    ["1"];
+		var names =  ["Line 1", "Line 2", "Line 3"];
+		var colors = ["#c05020", "#30c020", "#6060c0"];
+	
+		function showIds() {
+			setTimeout(function () {			
+				var text = '';
+				var count = $('#ids_count').val();
+				for (var i = 0; i < count; i++) {
+					text += '<tr><td class="label">Line ' + (i + 1) + '</td><td><input id="ids_' + i + '" class="input idsnames" value="' + (ids[i] || '') + '"></td></tr>';
+					ids[i] = ids[i] || '';
+				}
+				ids = ids.slice(0, count);
+				$('#idslist').html(text);
+				$('.idsnames').change(function() {
+					var id = $(this).attr('id').substring('ids_'.length);
+					ids[id] = $(this).val();
+					update();
+				}).keyup(function(){$(this).trigger('change');});
+			}, 100);
+		}
+	
+		function showNames() {
+			var text = '';
+			if ($('#names').prop('checked')) {
+				for (var i = 0; i < ids.length; i++) {
+					text += '<tr><td class="label">Line ' + (i + 1) + '</td><td><input id="name_' + i + '" class="input linenames" value="' + (names[i] || '') + '"></td></tr>';
+				}
+				$('#nameslist').html(text);
+				$('.linenames').change(function() {
+					var id = $(this).attr('id').substring('name_'.length);
+					names[id] = $(this).val();
+					update();
+				}).keyup(function(){$(this).trigger('change');});
+				
+			} else {
+				$('#nameslist').html(text);
+			}		
+		}
+		
+		function showColors() {
+			var text = '';
+			if (!$('#palette').val()) {
+				for (var i = 0; i < ids.length; i++) {
+					text += '<tr><td class="label">Line ' + (i + 1) + '</td><td><input id="color_' + i + '" class="input colornames" value="' + (colors[i] || '') + '"></td></tr>';
+				}
+				$('#colorslist').html(text);
+				$('.colornames').change(function() {
+					var id = $(this).attr('id').substring('color_'.length);
+					colors[id] = $(this).val();
+					update();
+				}).keyup(function(){$(this).trigger('change');});
+				
+			} else {
+				$('#colorslist').html(text);
+			}		
+		}	
+		
+		function getSettings() {
+			var config = {
+				//colors:   ["#c05020", "#30c020", "#6060c0"],
+				//names:    ["Temperature", "Humidity", "Airpressure"],
+			};
+			$('.value').each(function (index) {
+				if ($(this).attr('type') == 'checkbox') {
+					config[$(this).attr('id')] = $(this).prop('checked');
+				} else {
+					config[$(this).attr('id')] = escape($(this).val());
+				}
+			});
+			config._ids = escape(ids.join(';'));
+			if ($('#names').prop('checked')) config._names = escape(names.join(';'));
+			if (!$('#palette').val()) config._colors = escape(colors.join(';'));
+			var text = '';
+			for(var opt in config) {
+				if (config[opt]) text += (text ? '&' : '') + opt + '=' + config[opt];
+			}
+			return text;
+		}
+		
+		var timer = null;
+		function delayedUpdate() {
+			if (timer) {
+				clearTimeout(timer);
+				timer = null;
+			}
+			timer = setTimeout(update, 500);					
+		}
+		
+		function update() {
+			clearTimeout(timer);
+			timer = null;
+			$('#chart').css({height: ($('#height').val() || 500) + 90});
+			var settings = getSettings();
+			$('#chart').attr('src', 'index.html?' + settings + '&' + (new Date()).getTime());
+			$('#link').val(location.href.replace('edit.html', 'index.html')+ '?' + settings);
+		}
+	
+		$('.value').change(update).keyup(function () {$(this).trigger('change');});
+		
+		$('#names').change(function () {
+			showNames();
+			update();
+		});
+		$('#palette').change(function () {
+			showColors();
+		});		
+		
+		$('#width').spinner().on('spin', delayedUpdate);
+		$('#height').spinner().on('spin', delayedUpdate);
+		$('#smoothing').spinner().on('spin', delayedUpdate);
+		$('#strokeWidth').spinner().on('spin', delayedUpdate);
+		$('#afterComma').spinner().on('spin', delayedUpdate);
+		$('#ids_count').spinner().on('spin', showIds);
+		$('#pre_bg').change(function() {
+			var val = $(this).val();			
+			$('#bg').val($(this).val());
+			if (val) { 
+				$('#bg').hide();
+			} else {
+				$('#bg').show();
+			}
+			
+			delayedUpdate();
+		});
+		
+		$('#range').val("1440");
+		$('#axeX').val("lines");
+		$('#axeY').val("inside");
+		$('#ids_count').val(1);
+
+		showNames();
+		showColors();
+		showIds();
+
+		update();
+	</script>
+</body>
+</html>

@@ -1,13 +1,25 @@
 {
     "common": {
-        "name":                     "rickshaw",
-        "version":                  "0.0.0",
-        "title":                    "Rickshaw Charts",
-        "desc":                     "draw charts with rickshaw",
-        "platform":                 "javascript/Node.js",
-        "mode":                     "none",
-        "loglevel":                 "info",
-        "dependencies":             "websocket"
+        "name":         "rickshaw",
+        "version":      "0.0.1",
+        "title":        "Rickshaw Charts",
+        "desc":         {
+            "en": "This adapter draws charts with Rickshaw.",
+            "de": "Adapter benutzt Rickshaw-Module um Grafiken zu zeichnen.",
+            "ru": "Драйвер строит графики с помощью Rickshaw"
+        },
+        "authors": [
+            "bluefox <bluefox@ccu.io>", "hobbyquaker <hq@ccu.io>"
+        ],
+        "platform":     "javascript/Node.js",
+        "icon":         "rickshaw.png",
+        "mode":         "none",
+        "keywords":     ["charts", "graphics", "grafiken"],
+        "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
+        "loglevel":     "info",
+        "dependencies": ["websocket", "history", "web"],
+        "enabled":      true,
+        "singleton":    true
     },
     "native": {
 
