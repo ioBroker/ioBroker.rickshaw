@@ -14,4 +14,5 @@ draw charts with rickshaw
 - install "socketio"-adapter and create one instance
 - install "web"-adapter and create one instance.
 - Select in settings of "web"-adapter the instance of installed "socket.io"-instance.
-- install "rickshaw"-adapter and call 
+- install "rickshaw"-adapter and call
+- Go to http://ip:8082/rickshaw/edit.html
