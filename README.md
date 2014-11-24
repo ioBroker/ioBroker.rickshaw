@@ -4,6 +4,12 @@ ioBroker.rickshaw
 
 draw charts with rickshaw
 
+## Changelog
+### 0.0.2 (2014-11-24)
+* (bluefox) usable adapter
+
+
+
 ### How to use
 - install "socketio"-adapter and create one instance
 - install "web"-adapter and create one instance.

@@ -17,7 +17,7 @@
         "keywords":     ["charts", "graphics", "grafiken"],
         "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
         "loglevel":     "info",
-        "dependencies": ["websocket", "history", "web"],
+        "dependencies": ["socketio", "history", "web"],
         "localLink":    "http://%ip%:%web_port%/rickshaw/edit.html",
         "enabled":      true,
         "singleton":    true
