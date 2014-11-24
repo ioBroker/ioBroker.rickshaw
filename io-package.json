@@ -1,7 +1,7 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.0.1",
+        "version":      "0.0.2",
         "title":        "Rickshaw Charts",
         "desc":         {
             "en": "This adapter draws charts with Rickshaw.",
@@ -18,6 +18,7 @@
         "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
         "loglevel":     "info",
         "dependencies": ["websocket", "history", "web"],
+        "localLink":    "http://%ip%:%web_port%/rickshaw/edit.html",
         "enabled":      true,
         "singleton":    true
     },

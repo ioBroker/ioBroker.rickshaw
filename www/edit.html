@@ -1,9 +1,9 @@
 <html>
 <head>
-	<link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-	<!--script src="lib/js/jquery-1.11.1.min.js"></script-->
-	<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <link type="text/css" rel="stylesheet" href="lib/css/redmond/jquery-ui.min.css">
+
+    <script src="lib/js/jquery-1.11.1.min.js"></script>
+    <script src="lib/js/jquery-ui-1.10.3.full.min.js"></script>
 	<style>
 		.input {
 			width: 150;
@@ -14,19 +14,40 @@
 		.ui-widget input {
 			font-size: 14px;
 		}
-	</style>
+        .header {
+            font-weight: bold;
+        }
+        body {
+            font-family: Arial
+        }
+        .header1{
+            background: rgba(150, 150, 255, 0.100);
+        }
+        .header2{
+            background: rgba(130, 130, 255, 0.10);
+        }
+        .header3{
+            background: rgba(110, 110, 255, 0.100);
+        }
+        .header4{
+            background: rgba(90, 90, 255, 0.100);
+        }
+        .header5{
+            background: rgba(70, 70, 255, 0.100);
+        }
+    </style>
 </head>
 <body>
 	<table style="vertical-align:top"><tr>
-		<th class="translate">Input data</th>
-		<th class="translate">Legend and Axes</th>
-		<th class="translate">Names</th>
-		<th class="translate">Colors</th>
-		<th class="translate">Options</th>
+		<th class="translate header header1">Input data</th>
+		<th class="translate header header2">Legend and Axes</th>
+		<th class="translate header header3">Names</th>
+		<th class="translate header header4">Colors</th>
+		<th class="translate header header5">Options</th>
 	</tr>
 	<tr>
-		<td class="input-data" style="vertical-align:top"><table>
-			<tr><td class="translate label">Datapoints:</td><td><input id="ids_count"/></td></tr>
+		<td class="input-data header1" style="vertical-align:top"><table>
+			<tr><td class="translate label">Datapoints:</td><td><input class="input" id="ids_count"/></td></tr>
 			<tr><td colspan="2"><table id="idslist"></table></td></tr>
 			<tr><td class="translate">Range:</td><td><select id="range" class="value input">
 				<option value="10"      class="translate">10 Minutes</option>
@@ -48,8 +69,8 @@
 				<option value="525600"  class="translate">1 Year</option>
 				<option value="1051200" class="translate">2 Years</option>
 			</select></td></tr>
-			<tr><td class="translate">Width:</td><td> <input id="width"    class="value input"></td></tr>
-			<tr><td class="translate">Height:</td><td><input id="height"   class="value input"></td></tr>
+			<tr><td class="translate">Width:</td><td> <input id="width" class="value input"></td></tr>
+			<tr><td class="translate">Height:</td><td><input id="height" class="value input"></td></tr>
 			<tr><td class="translate">Chart type:</td><td><select id="renderer" class="value input">
 				<option value="line"        class="translate">Line</option>
 				<option value="area"        class="translate">Area</option>
@@ -59,7 +80,7 @@
 				<option value="stack"       class="translate">Stack</option>
 			</select></td></tr>
 		</table></td>
-		<td class="axes" style="vertical-align:top"><table>
+		<td class="axes header2" style="vertical-align:top"><table>
 			<tr><td class="translate label">Show axis bottom:</td><td><select class="value input" id="axeX">
 				<option value="" class="translate">none</option>
 				<option value="lines">With lines</option>
@@ -113,11 +134,11 @@
 				<option value="bottom:-5;left:50">Bottom, center, outside</option>
 			</select></td></tr>
 		</table></td>
-		<td class="names" style="vertical-align:top"><table>
+		<td class="names header3" style="vertical-align:top"><table>
 			<tr><td class="translate label">User defined names:</td><td><input type="checkbox" id="names"></td></tr>
 			<tr><td colspan="2"><table id="nameslist"></table></td></tr>
 		</table></td>
-		<td class="colors" style="vertical-align:top"><table>
+		<td class="colors header4" style="vertical-align:top"><table>
 			<tr><td class="translate label">Predefined background:</td><td> <select class="input" id="pre_bg">
 				<option value="" class="translate">User defined</option>
 				<option value="0">Azur</option>
@@ -144,7 +165,7 @@
 			</select></td></tr>
 			<tr><td colspan="2"><table id="colorslist"></table></td></tr>
 		</table></td>
-		<td class="thickness" style="vertical-align:top"><table>
+		<td class="thickness header5" style="vertical-align:top"><table>
 			<tr><td class="translate">Line thick:</td><td><input type="text" class="value input" id="strokeWidth"></td></tr>
 			<tr><td class="translate">Hover details:</td><td><input type="checkbox" class="value" id="hoverDetail"></td></tr>
 			<tr><td class="translate">Time format:</td><td>  <select class="value input" id="timeFormat">
@@ -162,7 +183,7 @@
 	<tr><td colspan=5>&nbsp;</td></tr>
 	<tr>
 		<td colspan=5>
-			Link:<input type="text" id="link" style="width:90%">
+			Link:<input type="text" id="link" style="width:90%"><button style="padding-left: 10" id="open" class="translate">Open</button>
 		</td>
 	</tr>
 	</table>
@@ -179,13 +200,13 @@
 		var ids =    ["1"];
 		var names =  ["Line 1", "Line 2", "Line 3"];
 		var colors = ["#c05020", "#30c020", "#6060c0"];
-	
+
 		function showIds() {
 			setTimeout(function () {			
 				var text = '';
 				var count = $('#ids_count').val();
 				for (var i = 0; i < count; i++) {
-					text += '<tr><td class="label">Line ' + (i + 1) + '</td><td><input id="ids_' + i + '" class="input idsnames" value="' + (ids[i] || '') + '"></td></tr>';
+					text += '<tr><td class="label">Line ' + (i + 1) + '</td><td><input id="ids_' + i + '" class="input idsnames" value="' + (ids[i] || '') + '"><button class="select-dialog" data-ids="' + i + '">...</button></td></tr>';
 					ids[i] = ids[i] || '';
 				}
 				ids = ids.slice(0, count);
@@ -195,6 +216,16 @@
 					ids[id] = $(this).val();
 					update();
 				}).keyup(function(){$(this).trigger('change');});
+                $('.select-dialog').button({
+                    text: false,
+                    icons: {
+                        primary:'ui-icon-folder-open'
+                    }
+                }).css({width: 25, height: 22}).click(function () {
+                    var id = $(this).attr('data-ids');
+                    //TO DO
+                    alert('Not implemented');
+                })
 			}, 100);
 		}
 	
@@ -268,7 +299,7 @@
 		function update() {
 			clearTimeout(timer);
 			timer = null;
-			$('#chart').css({height: ($('#height').val() || 500) + 90});
+			$('#chart').css({height: (parseInt($('#height').val()) || 500) + 90});
 			var settings = getSettings();
 			$('#chart').attr('src', 'index.html?' + settings + '&' + (new Date()).getTime());
 			$('#link').val(location.href.replace('edit.html', 'index.html')+ '?' + settings);
@@ -306,6 +337,10 @@
 		$('#axeX').val("lines");
 		$('#axeY').val("inside");
 		$('#ids_count').val(1);
+
+        $('#open').button().click(function () {
+            window.open($('#link').val());
+        });
 
 		showNames();
 		showColors();

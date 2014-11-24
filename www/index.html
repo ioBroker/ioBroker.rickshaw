@@ -2,14 +2,14 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
     <link type="text/css" rel="stylesheet" href="lib/css/rickshaw.min.css">
-	<link type="text/css" rel="stylesheet" href="lib/css/lines.css">
-	<link type="text/css" rel="stylesheet" href="lib/css/redmond/jquery-ui.css">
+	<link type="text/css" rel="stylesheet" href="lib/css/redmond/jquery-ui.min.css">
 
 	<script src="lib/js/jquery-1.11.1.min.js"></script>
-	<script src="lib/js/jquery-ui-1.10.3.full.min.js"></script><!-- todo replace it with only slider -->
+	<script src="lib/js/jquery-ui.1.11.2.slider.min.js"></script>
 	<script src="lib/js/d3.v3.js"></script>
 	<script src="lib/js/rickshaw.min.js"></script>
     <script src="lib/js/socket.io.js"></script>
+    <script src="/_socket/info.js"></script>
 	<style>
 		.rickshaw_graph .x_tick.invisible {
 			border-left: 0px rgba(0, 0, 0, 0) !important;
@@ -18,6 +18,22 @@
 			font-size: 24px;
 			font-weight: bold;
 		}
+        div, span, p, td {
+            font-family: Arial, sans-serif;
+        }
+        #chart {
+            display: inline-block;
+        }
+        #legend_container {
+            position: absolute;
+            right: 0;
+            bottom: 26px;
+            width: 0;
+        }
+        #chart_container {
+            float: left;
+            position: relative;
+        }
 	</style>
 </head>
 <body>
@@ -82,11 +98,18 @@ for (var i = 0; i < range; i++) {
 	seriesData[0][i].y = Math.sin(3.14159265 / range * i) * 150;
 }*/
 //var socket = io.connect();
+var socketURL = '';
+var socketSESSION = '';
+if (typeof socketUrl != 'undefined') {
+    socketURL = socketUrl;
+    if (socketURL && socketURL[0] == ':') {
+        socketURL = 'http://' + location.hostname + socketURL;
+    }
+    socketSESSION = socketSession;
+}
 
-var url = 'http://' + location.hostname + ':8084';
-
-var socket = io.connect(url, {
-//    'query': 'key=' + socketSession,
+var socket = io.connect(socketURL, {
+    'query': 'key=' + socketSESSION,
     'reconnection limit': 10000,
     'max reconnection attempts': Infinity
 });
@@ -111,8 +134,10 @@ function readOneChart(id, index, callback) {
             config._units[index] = '';
         }
         socket.emit('subscribe', id);
-
-        socket.emit('getStateHistory', id, function (err, res) {
+        var start = Math.round((new Date()).getTime() / 1000)
+        var end   = start;
+        start -= (config.range * 60) || 31536000/* 1 year */;
+        socket.emit('getStateHistory', id, start, end, function (err, res) {
             if (!err && res) {
                 for (var i = res.length - 1; i >= 0; i--) {
                     seriesData[index].push({x: res[i].ts, y: res[i].val});
