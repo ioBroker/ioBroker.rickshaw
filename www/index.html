@@ -126,7 +126,7 @@ socket.on('stateChange', function (changeId, state) {
 
 function readOneChart(id, index, callback) {
     socket.emit('getObject', id, function (err, res) {
-        if (!err && res.common) {
+        if (!err && res && res.common) {
             config._names[index] = config._names[index] || res.common.name;
             config._units[index] = res.common.unit ? res.common.unit.replace('�', '°') : '';
         } else {
