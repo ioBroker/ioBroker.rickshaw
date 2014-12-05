@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.0.4 (2014-12-05)
+* (bluefox) use "linear" interpolation by default
+
 ### 0.0.3 (2014-11-26)
 * (bluefox) fix IDs without units
 

@@ -5,22 +5,13 @@
 /*jslint node: true */
 "use strict";
 
-
-console.log('TODO: Automate it. Important!!!: ');
-console.log(' To update sonos git');
-console.log(' add to package.json');
-console.log('     "dependencies": {');
-console.log('         "sonos-discovery": "jishi/node-sonos-discovery",');
-console.log('         "sonos-web-controller": "jishi/node-sonos-web-controller.git"');
-console.log('      },');
-console.log(' And call npm install');
-
 module.exports = function (grunt) {
 
     var srcDir    = __dirname + '/';
     var dstDir    = srcDir + '.build/';
     var pkg       = grunt.file.readJSON('package.json');
     var iopackage = grunt.file.readJSON('io-package.json');
+    var version   = (pkg && pkg.version) ? pkg.version : iopackage.common.version;
 
     // Project configuration.
     grunt.initConfig({
@@ -34,12 +25,12 @@ module.exports = function (grunt) {
                 options: {
                     patterns: [
                         {
-                            match: /var version = '[\.0-9]*';/g,
-                            replacement: "var version = '" + iopackage.common.version + "';"
+                            match: /var version = *'[\.0-9]*';/g,
+                            replacement: "var version = '" + version + "';"
                         },
                         {
-                            match: /"version"\: "[\.0-9]*",/g,
-                            replacement: '"version": "' + iopackage.common.version + '",'
+                            match: /"version"\: *"[\.0-9]*",/g,
+                            replacement: '"version": "' + version + '",'
                         }
                     ]
                 },
@@ -49,7 +40,8 @@ module.exports = function (grunt) {
                         flatten: true,
                         src:     [
                                 srcDir + 'controller.js',
-                                srcDir + 'package.json'
+                                srcDir + 'package.json',
+                                srcDir + 'io-package.json'
                         ],
                         dest:    srcDir
                     }
@@ -72,6 +64,12 @@ module.exports = function (grunt) {
                     url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/tasks/jshint.js'
                 },
                 dest: 'tasks/jshint.js'
+            },
+            get_gruntfile: {
+                options: {
+                    url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.build/master/adapters/Gruntfile.js'
+                },
+                dest: 'Gruntfile.js'
             },
             get_jscsRules: {
                 options: {
@@ -159,8 +157,8 @@ module.exports = function (grunt) {
                 ]
             }
         }
-
     });
+
     grunt.registerTask('updateReadme', function () {
         var readme = grunt.file.read('README.md');
         var pos = readme.indexOf('## Changelog\r\n');

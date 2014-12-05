@@ -252,7 +252,8 @@ function buildGraph() {
     config._units      = config._units || [];
     config.useComma    = (config.useComma   === undefined) ? true: config.useComma;
     config.afterComma  = (config.afterComma === undefined) ? 2: config.afterComma;
-    config.timeFixture =  new Rickshaw.Fixtures.Time.Local()
+    config.timeFixture =  new Rickshaw.Fixtures.Time.Local();
+    config.interpolation = config.interpolation || 'linear';
 // Replace background
     if (config.bg && config.bg.length < 3 && backgrounds[config.bg]) config.bg = backgrounds[config.bg];
 

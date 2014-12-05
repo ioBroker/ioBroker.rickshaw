@@ -176,6 +176,13 @@
 				<option value="%H:%M:%S %m.%e.%y">HH:MM:SS mm.dd.yy</option>
 			</select></td></tr>
 			<tr><td class="translate">Smoothing:</td><td>    <input type="text"     class="value input" id="smoothing"></td></tr>
+            <tr><td class="translate">Interpolation:</td><td><select id="interpolation" class="value input">
+                <option value=""           class="translate">default</option>
+                <option value="linear"     class="translate">linear</option>
+                <option value="step-after" class="translate">step-after</option>
+                <option value="cardinal"   class="translate">cardinal</option>
+                <option value="basis"      class="translate">basis</option>
+            </select></td></tr>
 			<tr><td class="translate">Preview:</td><td>      <input type="checkbox" class="value" id="preview"></td></tr>
 			<tr><td class="translate">After comma:</td><td>    <input type="text"   class="value input" id="afterComma"></td></tr>
 		</table></td>

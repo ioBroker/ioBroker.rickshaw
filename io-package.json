@@ -1,7 +1,7 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.0.3",
+        "version":      "0.0.4",
         "title":        "Rickshaw Charts",
         "desc":         {
             "en": "This adapter draws charts with Rickshaw.",
