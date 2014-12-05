@@ -4,12 +4,12 @@
         "version":      "0.0.4",
         "title":        "Rickshaw Charts",
         "desc":         {
-            "en": "This adapter draws charts with Rickshaw.",
+            "en": "This adapter draws charts with Rickshaw in ioBroker.",
             "de": "Adapter benutzt Rickshaw-Module um Grafiken zu zeichnen.",
             "ru": "Драйвер строит графики с помощью Rickshaw"
         },
         "authors": [
-            "bluefox <bluefox@ccu.io>", "hobbyquaker <hq@ccu.io>"
+            "bluefox <bluefox@ccu.io>"
         ],
         "platform":     "javascript/Node.js",
         "icon":         "rickshaw.png",
