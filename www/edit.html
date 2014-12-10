@@ -1,10 +1,23 @@
 <html>
 <head>
     <link type="text/css" rel="stylesheet" href="lib/css/redmond/jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/css/jqGrid/ui.jqgrid-4.5.4.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/css/fancytree/ui.fancytree.min.css"/>
 
-    <script src="lib/js/jquery-1.11.1.min.js"></script>
-    <script src="lib/js/jquery-ui-1.10.3.full.min.js"></script>
-	<style>
+    <script type="text/javascript" src="lib/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="lib/js/jquery-ui-1.10.3.full.min.js"></script>
+    <script type="text/javascript" src="lib/js/jquery.jqGrid-4.5.4.min.js"></script>
+    <script type="text/javascript" src="lib/js/grid.locale-all.js"></script>
+    <script type="text/javascript" src="lib/js/jquery.fancytree-all.min.js"></script>
+    <script type="text/javascript" src="js/translate.js"></script>
+    <script type="text/javascript" src="js/words.js"></script><!--this file must be after translate.js -->
+
+    <script type="text/javascript" src="js/selectID.js"></script>
+
+    <script src="lib/js/socket.io.js"></script>
+    <script src="/_socket/info.js"></script>
+
+    <style>
 		.input {
 			width: 150;
 		}
@@ -204,11 +217,38 @@
 	<iframe src="index.html" style="width: 100%; bottom: 0; height: 500" id="chart"></iframe>
 	
 	<script>
-		var ids =    ["1"];
-		var names =  ["Line 1", "Line 2", "Line 3"];
-		var colors = ["#c05020", "#30c020", "#6060c0"];
+		var ids =     [];
+		var names =   ["Line 1", "Line 2", "Line 3"];
+		var colors =  ["#c05020", "#30c020", "#6060c0"];
+        var objects = {};
+        var states =  {};
 
-		function showIds() {
+        var socketURL = '';
+        var socketSESSION = '';
+        if (typeof socketUrl != 'undefined') {
+            socketURL = socketUrl;
+            if (socketURL && socketURL[0] == ':') {
+                socketURL = 'http://' + location.hostname + socketURL;
+            }
+            socketSESSION = socketSession;
+        }
+
+        var socket = io.connect(socketURL, {
+            'query': 'key=' + socketSESSION,
+            'reconnection limit': 10000,
+            'max reconnection attempts': Infinity
+        });
+
+        socket.on('connect', function () {
+            socket.emit('getObjects', function (err, res) {
+                objects = res;
+                socket.emit('getStates', function (err, res) {
+                    states = res;
+                });
+            });
+        });
+
+        function showIds() {
 			setTimeout(function () {			
 				var text = '';
 				var count = $('#ids_count').val();
@@ -230,8 +270,9 @@
                     }
                 }).css({width: 25, height: 22}).click(function () {
                     var id = $(this).attr('data-ids');
-                    //TO DO
-                    alert('Not implemented');
+                    selectID(null, {states: states, objects: objects, currentId: $('#ids_' + id).val()}, function (newId) {
+                        $('#ids_' + id).val(newId).trigger('change');
+                    });
                 })
 			}, 100);
 		}

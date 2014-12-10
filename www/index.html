@@ -115,11 +115,13 @@ var socket = io.connect(socketURL, {
 });
 
 socket.on('stateChange', function (changeId, state) {
-    for (j = 0; j < config._ids.length; j++) {
-        if (config._ids[j] == changeId) {
-            seriesData[j].push({x: state.ts, y: state.val});
-            graph.update();
-            break;
+    if (config && config._ids) {
+        for (j = 0; j < config._ids.length; j++) {
+            if (config._ids[j] == changeId) {
+                seriesData[j].push({x: state.ts, y: state.val});
+                graph.update();
+                break;
+            }
         }
     }
 });
