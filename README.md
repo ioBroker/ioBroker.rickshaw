@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.0.5 (2014-12-10)
+* (bluefox) build in select ID dialog
+
 ### 0.0.4 (2014-12-05)
 * (bluefox) use "linear" interpolation by default
 

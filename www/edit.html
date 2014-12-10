@@ -270,7 +270,9 @@
                     }
                 }).css({width: 25, height: 22}).click(function () {
                     var id = $(this).attr('data-ids');
-                    selectID(null, {states: states, objects: objects, currentId: $('#ids_' + id).val()}, function (newId) {
+                    selectID(null, {states: states, objects: objects, currentId: $('#ids_' + id).val(), filter: {
+                        common: {history: {enabled: true}}
+                    }}, function (newId) {
                         $('#ids_' + id).val(newId).trigger('change');
                     });
                 })
