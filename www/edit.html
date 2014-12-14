@@ -1,18 +1,17 @@
 <html>
 <head>
-    <link type="text/css" rel="stylesheet" href="lib/css/redmond/jquery-ui.min.css">
-    <link rel="stylesheet" type="text/css" href="lib/css/fancytree/ui.fancytree.min.css"/>
+    <link type="text/css" rel="stylesheet" href="/lib/css/themes/jquery-ui/redmond/jquery-ui.min.css">
+    <link type="text/css" rel="stylesheet" href="/lib/css/fancytree/ui.fancytree.min.css"/>
 
-    <script type="text/javascript" src="lib/js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="lib/js/jquery-ui-1.10.3.full.min.js"></script>
-    <script type="text/javascript" src="lib/js/jquery.fancytree-all.min.js"></script>
-    <script type="text/javascript" src="js/translate.js"></script>
+    <script type="text/javascript" src="/lib/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/lib/js/jquery-ui-1.10.3.full.min.js"></script>
+    <script type="text/javascript" src="/lib/js/jquery.fancytree-all.min.js"></script>
+    <script type="text/javascript" src="/lib/js/translate.js"></script>
+    <script type="text/javascript" src="/lib/js/selectID.js"></script>
+    <script type="text/javascript" src="/lib/js/socket.io.js"></script>
+
+    <script type="text/javascript" src="/_socket/info.js"></script>
     <script type="text/javascript" src="js/words.js"></script><!--this file must be after translate.js -->
-
-    <script type="text/javascript" src="js/selectID.js"></script>
-
-    <script src="lib/js/socket.io.js"></script>
-    <script src="/_socket/info.js"></script>
 
     <style>
 		.input {
@@ -230,6 +229,17 @@
             connCfg: {
                 socketUrl: socketUrl,
                 socketSession: socketSession
+            },
+            texts: {
+                select:   _('Select'),
+                cancel:   _('Cancel'),
+                all:      _('All'),
+                id:       _('ID'),
+                name:     _('Name'),
+                role:     _('Role'),
+                room:     _('Room'),
+                value:    _('Value'),
+                selectid: _('Select ID')
             }
         });
 

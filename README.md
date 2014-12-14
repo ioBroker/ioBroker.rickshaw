@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.0.7 (2014-12-12)
+* (bluefox) remove common files like jquery and so on
+
 ### 0.0.6 (2014-12-12)
 * (bluefox) update select ID dialog and remove jqGrid
 
