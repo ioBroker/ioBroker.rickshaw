@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.1.1 (2015-01-02)
+* (bluefox) add history to dependencies
+
 ### 0.1.0 (2015-01-02)
 * (bluefox) enable npm install
 
