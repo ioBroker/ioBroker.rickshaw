@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.1.0 (2015-01-02)
+* (bluefox) enable npm install
+
 ### 0.0.7 (2014-12-12)
 * (bluefox) remove common files like jquery and so on
 
