@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.1.2 (2015-01-03)
+* (bluefox) fix selectId dialog
+
 ### 0.1.1 (2015-01-02)
 * (bluefox) add history to dependencies
 

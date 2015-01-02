@@ -116,7 +116,7 @@ var socket = io.connect(socketURL, {
 });
 
 socket.on('stateChange', function (changeId, state) {
-    if (config && config._ids) {
+    if (graph && config && config._ids) {
         for (j = 0; j < config._ids.length; j++) {
             if (config._ids[j] == changeId) {
                 seriesData[j].push({x: state.ts, y: state.val});
@@ -142,6 +142,7 @@ function readOneChart(id, index, callback) {
         start -= (config.range * 60) || 31536000/* 1 year */;
         socket.emit('getStateHistory', id, start, end, function (err, res) {
             if (!err && res) {
+                //for (var i = 0, len = res.length; i < len; i++) {
                 for (var i = res.length - 1; i >= 0; i--) {
                     seriesData[index].push({x: res[i].ts, y: res[i].val});
                 }
