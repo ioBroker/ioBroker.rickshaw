@@ -1,7 +1,7 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.1.3",
+        "version":      "0.1.4",
         "title":        "Rickshaw Charts",
         "desc":         {
             "en": "This adapter draws charts with Rickshaw in ioBroker.",

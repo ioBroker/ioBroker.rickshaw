@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.1.4 (2015-01-08)
+* (bluefox) set name of socket connection
+
 ### 0.1.3 (2015-01-07)
 * (bluefox) set onlyWWW flag
 

@@ -50,6 +50,7 @@
 	<div id="preview" style='display:none'></div>
 	<div id="legend" style="position:absolute"></div>
 	<div id="title" style="position:absolute"></div>
+    <div id="no-connection" style="position:absolute; left:50%; top: 50%; display:none; font-size: 3em; background: rgba(0,0,0,0.1); border-radius: 10; text-align: center">No connection to server</div>
 </div>
 
 <script>
@@ -67,6 +68,12 @@ var backgrounds = [
 	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,255,244,1)), color-stop(40%,rgba(223,229,215,1)), color-stop(100%,rgba(179,190,173,1)))',
 	'-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(241,231,103,1)), color-stop(100%,rgba(254,182,69,1)))'
 ];
+// Show "no connection" message after 5 seconds
+var disconnectTimeout = setTimeout(function () {
+    disconnectTimeout = null;
+    //Show disconnected message
+    $('#no-connection').show();
+}, 5000);
 
 var config = {
 	_colors:   ["#c05020", "#30c020", "#6060c0"],
@@ -109,23 +116,52 @@ if (typeof socketUrl != 'undefined') {
     socketSESSION = socketSession;
 }
 
-var socket = io.connect(socketURL, {
-    'query': 'key=' + socketSESSION,
-    'reconnection limit': 10000,
-    'max reconnection attempts': Infinity
-});
-
-socket.on('stateChange', function (changeId, state) {
-    if (graph && config && config._ids) {
-        for (j = 0; j < config._ids.length; j++) {
-            if (config._ids[j] == changeId) {
-                seriesData[j].push({x: state.ts, y: state.val});
-                graph.update();
-                break;
+var socket;
+if (socketURL) {
+    socket = io.connect(socketURL, {
+        'query': 'key=' + socketSESSION,
+        'reconnection limit': 10000,
+        'max reconnection attempts': Infinity
+    });
+    socket.on('stateChange', function (changeId, state) {
+        if (graph && config && config._ids) {
+            for (j = 0; j < config._ids.length; j++) {
+                if (config._ids[j] == changeId) {
+                    seriesData[j].push({x: state.ts, y: state.val});
+                    graph.update();
+                    break;
+                }
             }
         }
-    }
-});
+    });
+    socket.on('connect', function () {
+        socket.emit('name', 'rickshaw');
+        //console.log('connect');
+        if (disconnectTimeout) {
+            $('#no-connection').hide();
+            clearTimeout(disconnectTimeout);
+            disconnectTimeout = null;
+        }
+        readData();
+    });
+    socket.on('disconnect', function () {
+        //console.log('disconnect');
+        if (!disconnectTimeout) {
+            disconnectTimeout = setTimeout(function () {
+                //console.log('disconnected');
+                disconnectTimeout = null;
+                //Show disconnected message
+                $('#no-connection').show();
+            }, 5000);
+        }
+    });
+    // After reconnect the "connect" event will be immediately called
+    /*socket.on('reconnect', function () {
+        console.log('reconnect');
+    });*/
+}
+
+
 
 function readOneChart(id, index, callback) {
     socket.emit('getObject', id, function (err, res) {
@@ -196,6 +232,12 @@ function readOneChart(id, index, callback) {
 }
 
 function readData() {
+    if (disconnectTimeout) {
+        $('#no-connection').hide();
+        clearTimeout(disconnectTimeout);
+        disconnectTimeout = null;
+    }
+
     if (config._ids) {
         var _ids = [];
         for (var j = 0; j < config._ids.length; j++) {
@@ -500,8 +542,6 @@ function buildGraph() {
     }
 }
 
-
-readData();
 </script>
 
 </body>
