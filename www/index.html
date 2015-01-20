@@ -116,50 +116,49 @@ if (typeof socketUrl != 'undefined') {
     socketSESSION = socketSession;
 }
 
-var socket;
-if (socketURL) {
-    socket = io.connect(socketURL, {
-        'query': 'key=' + socketSESSION,
-        'reconnection limit': 10000,
-        'max reconnection attempts': Infinity
-    });
-    socket.on('stateChange', function (changeId, state) {
-        if (graph && config && config._ids) {
-            for (j = 0; j < config._ids.length; j++) {
-                if (config._ids[j] == changeId) {
-                    seriesData[j].push({x: state.ts, y: state.val});
-                    graph.update();
-                    break;
-                }
+var socket = io.connect(socketURL, {
+    'query': 'key=' + socketSESSION,
+    'reconnection limit': 10000,
+    'max reconnection attempts': Infinity
+});
+
+socket.on('stateChange', function (changeId, state) {
+    if (graph && config && config._ids) {
+        for (j = 0; j < config._ids.length; j++) {
+            if (config._ids[j] == changeId) {
+                seriesData[j].push({x: state.ts, y: state.val});
+                graph.update();
+                break;
             }
         }
-    });
-    socket.on('connect', function () {
-        socket.emit('name', 'rickshaw');
-        //console.log('connect');
-        if (disconnectTimeout) {
-            $('#no-connection').hide();
-            clearTimeout(disconnectTimeout);
+    }
+});
+socket.on('connect', function () {
+    socket.emit('name', 'rickshaw');
+    //console.log('connect');
+    if (disconnectTimeout) {
+        $('#no-connection').hide();
+        clearTimeout(disconnectTimeout);
+        disconnectTimeout = null;
+    }
+    readData();
+});
+socket.on('disconnect', function () {
+    //console.log('disconnect');
+    if (!disconnectTimeout) {
+        disconnectTimeout = setTimeout(function () {
+            //console.log('disconnected');
             disconnectTimeout = null;
-        }
-        readData();
-    });
-    socket.on('disconnect', function () {
-        //console.log('disconnect');
-        if (!disconnectTimeout) {
-            disconnectTimeout = setTimeout(function () {
-                //console.log('disconnected');
-                disconnectTimeout = null;
-                //Show disconnected message
-                $('#no-connection').show();
-            }, 5000);
-        }
-    });
-    // After reconnect the "connect" event will be immediately called
-    /*socket.on('reconnect', function () {
-        console.log('reconnect');
-    });*/
-}
+            //Show disconnected message
+            $('#no-connection').show();
+        }, 5000);
+    }
+});
+// After reconnect the "connect" event will be immediately called
+/*socket.on('reconnect', function () {
+    console.log('reconnect');
+});*/
+
 
 
 
