@@ -277,13 +277,24 @@ function buildGraph() {
     }
 
     var series = [];
+    var min = null;
     for (var i = seriesData.length - 1; i >= 0; i--) {
-        series.push({
-            color: config.palette ? config.palette.color() : (config._colors[i] || 'black'),
-            data: seriesData[i],
-            name: (config._names ? config._names[i] : '') || ('Line ' + config._ids[i])
-        });
+        // Find minimum for all grafics
+        if (min === null) min = seriesData[i] ? seriesData[i][0].y : 0;
+        if (seriesData[i]) {
+            for (var t = 0; t < seriesData[i].length; t++) {
+                if (min > seriesData[i][t].y) min = seriesData[i][t].y;
+            }
+
+            series.push({
+                color: config.palette ? config.palette.color() : (config._colors[i] || 'black'),
+                data: seriesData[i],
+                name: (config._names ? config._names[i] : '') || ('Line ' + config._ids[i])
+            });
+        }
     }
+
+    if (min > 0) min = 0;
 
     config.element     = document.getElementById("chart");
     config.series      = series;
@@ -299,6 +310,10 @@ function buildGraph() {
     config.afterComma  = (config.afterComma === undefined) ? 2: config.afterComma;
     config.timeFixture =  new Rickshaw.Fixtures.Time.Local();
     config.interpolation = config.interpolation || 'linear';
+    config.min         = (config.min !== undefined && config.min != '' && parseFloat(config.min) != NaN) ? parseFloat(config.min) : min;
+    if ((config.max !== undefined && config.max != '' && parseFloat(config.max) != NaN)) {
+        config.max     = parseFloat(config.max);
+    }
 // Replace background
     if (config.bg && config.bg.length < 3 && backgrounds[config.bg]) config.bg = backgrounds[config.bg];
 

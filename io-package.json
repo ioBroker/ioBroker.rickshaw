@@ -1,7 +1,7 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.1.5",
+        "version":      "0.2.0",
         "title":        "Rickshaw Charts",
         "desc":         {
             "en": "This adapter draws charts with Rickshaw in ioBroker.",
@@ -16,6 +16,7 @@
         "mode":         "none",
         "keywords":     ["charts", "graphics", "grafiken"],
         "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
+        "readme":       "https://github.com/ioBroker/ioBroker.rickshaw/blob/master/README.md",
         "loglevel":     "info",
         "dependencies": ["history", "web"],
         "localLink":    "http://%ip%:%web_port%/rickshaw/edit.html",

@@ -48,7 +48,7 @@
 </head>
 <body>
 	<table style="vertical-align:top"><tr>
-		<th class="translate header header1">Input data</th>
+		<th class="header header1"><button id="clear" title="Reset settings" class="translateT" style="float: left;">Clear</button><span class="translate">Input data</span></th>
 		<th class="translate header header2">Legend and Axes</th>
 		<th class="translate header header3">Names</th>
 		<th class="translate header header4">Colors</th>
@@ -128,19 +128,21 @@
 			<tr><td class="translate">Title:</td><td> <input type="text" id="title" class="value input"></td></tr>
 			<tr><td class="translate">Title position:</td><td>  <select class="value input" id="title_pos">
 				<option value="" class="translate">none</option>
-				<option value="top:5;left:5">Top, left, inside</option>
-				<option value="top:5;right:5">Top, right, inside</option>
-				<option value="top:5;left:50">Top, center, inside</option>
-				<option value="top:50;left:5">Middle, left, inside</option>
-				<option value="top:50;right:5">Middle, right, inside</option>
-				<option value="bottom:5;left:5">Bottom, left, inside</option>
-				<option value="bottom:5;right:5">Bottom, right, inside</option>
-				<option value="bottom:5;left:50">Bottom, center, inside</option>
+				<option value="top:5;left:5" class="translate">Top, left, inside</option>
+				<option value="top:5;right:5" class="translate">Top, right, inside</option>
+				<option value="top:5;left:50" class="translate">Top, center, inside</option>
+				<option value="top:50;left:5" class="translate">Middle, left, inside</option>
+				<option value="top:50;right:5" class="translate">Middle, right, inside</option>
+				<option value="bottom:5;left:5" class="translate">Bottom, left, inside</option>
+				<option value="bottom:5;right:5" class="translate">Bottom, right, inside</option>
+				<option value="bottom:5;left:50" class="translate">Bottom, center, inside</option>
 				
-				<option value="top:5;right:-5">Top, right, outside</option>
-				<option value="top:50;right:-5">Middle, right, outside</option>
-				<option value="bottom:5;right:-5">Bottom, right, outside</option>
-				<option value="bottom:-5;left:50">Bottom, center, outside</option>
+				<option value="top:5;right:-5" class="translate">Top, right, outside</option>
+				<option value="top:50;right:-5" class="translate">Middle, right, outside</option>
+				<option value="bottom:5;right:-5" class="translate">Bottom, right, outside</option>
+				<option value="bottom:-5;left:50" class="translate">Bottom, center, outside</option>
+                <tr><td class="translate">Minimum:</td><td> <input id="min" class="value input"></td></tr>
+                <tr><td class="translate">Maximum:</td><td><input id="max" class="value input"></td></tr>
 			</select></td></tr>
 		</table></td>
 		<td class="names header3" style="vertical-align:top"><table>
@@ -199,7 +201,7 @@
 	<tr><td colspan=5>&nbsp;</td></tr>
 	<tr>
 		<td colspan=5>
-			Link:<input type="text" id="link" style="width:90%"><button style="padding-left: 10" id="open" class="translate">Open</button>
+			Link:<input type="text" id="link" style="width:90%"><button style="padding-left: 10" id="open" class="translateB">Open</button>
 		</td>
 	</tr>
 	</table>
@@ -213,6 +215,94 @@
 	<iframe src="index.html" style="width: 100%; bottom: 0; height: 500" id="chart"></iframe>
     <div id="dialog-select-member" style="display:none"></div>
 	<script>
+        systemDictionary = {
+            "Input data":           {"en": "Input data", "de": "Input data", "ru": "Input data"},
+            "Legend and Axes":      {"en": "Legend and Axes", "de": "Legend and Axes", "ru": "Legend and Axes"},
+            "Names":                {"en": "Names", "de": "Names", "ru": "Names"},
+            "Colors":               {"en": "Colors", "de": "Colors", "ru": "Colors"},
+            "Options":              {"en": "Options", "de": "Options", "ru": "Options"},
+            "Datapoints:":          {"en": "Datapoints:", "de": "Datapoints:", "ru": "Datapoints:"},
+            "Range:":               {"en": "Range:", "de": "Range:", "ru": "Range:"},
+            "10 Minutes":           {"en": "10 Minutes", "de": "10 Minutes", "ru": "10 Minutes"},
+            "30 Minutes":           {"en": "30 Minutes", "de": "30 Minutes", "ru": "30 Minutes"},
+            "1 Hour":               {"en": "1 Hour", "de": "1 Hour", "ru": "1 Hour"},
+            "2 Hours":              {"en": "2 Hours", "de": "2 Hours", "ru": "2 Hours"},
+            "3 Hours":              {"en": "3 Hours", "de": "3 Hours", "ru": "3 Hours"},
+            "6 Hours":              {"en": "6 Hours", "de": "6 Hours", "ru": "6 Hours"},
+            "12 Hours":             {"en": "12 Hours", "de": "12 Hours", "ru": "12 Hours"},
+            "1 Day":                {"en": "1 Day", "de": "1 Day", "ru": "1 Day"},
+            "2 Days":               {"en": "2 Days", "de": "2 Days", "ru": "2 Days"},
+            "3 Days":               {"en": "3 Days", "de": "3 Days", "ru": "3 Days"},
+            "7 Days":               {"en": "7 Days", "de": "7 Days", "ru": "7 Days"},
+            "14 Days":              {"en": "14 Days", "de": "14 Days", "ru": "14 Days"},
+            "1 Month":              {"en": "1 Month", "de": "1 Month", "ru": "1 Month"},
+            "2 Months":             {"en": "2 Months", "de": "2 Months", "ru": "2 Months"},
+            "3 Months":             {"en": "3 Months", "de": "3 Months", "ru": "3 Months"},
+            "6 Months":             {"en": "6 Months", "de": "6 Months", "ru": "6 Months"},
+            "1 Year":               {"en": "1 Year", "de": "1 Year", "ru": "1 Year"},
+            "2 Years":              {"en": "2 Years", "de": "2 Years", "ru": "2 Years"},
+            "Width:":               {"en": "Width:", "de": "Width:", "ru": "Width:"},
+            "Height:":              {"en": "Height:", "de": "Height:", "ru": "Height:"},
+            "Chart type:":          {"en": "Chart type:", "de": "Chart type:", "ru": "Chart type:"},
+            "Line":                 {"en": "Line", "de": "Line", "ru": "Line"},
+            "Area":                 {"en": "Area", "de": "Area", "ru": "Area"},
+            "Bar":                  {"en": "Bar", "de": "Bar", "ru": "Bar"},
+            "Line plot":            {"en": "Line plot", "de": "Line plot", "ru": "Line plot"},
+            "Scatter plot":         {"en": "Scatter plot", "de": "Scatter plot", "ru": "Scatter plot"},
+            "Stack":                {"en": "Stack", "de": "Stack", "ru": "Stack"},
+            "Show axis bottom:":    {"en": "Show axis bottom:", "de": "Show axis bottom:", "ru": "Show axis bottom:"},
+            "Show axis left:":      {"en": "Show axis left:", "de": "Show axis left:", "ru": "Show axis left:"},
+            "Show axis right:":     {"en": "Show axis right:", "de": "Show axis right:", "ru": "Show axis right:"},
+            "Show legend:":         {"en": "Show legend:", "de": "Show legend:", "ru": "Show legend:"},
+            "Title:":               {"en": "Title:", "de": "Title:", "ru": "Title:"},
+            "Title position:":      {"en": "Title position:", "de": "Title position:", "ru": "Title position:"},
+            "Top, left, inside":    {"en": "Top, left, inside", "de": "Top, left, inside", "ru": "Top, left, inside"},
+            "Top, right, inside":   {"en": "Top, right, inside", "de": "Top, right, inside", "ru": "Top, right, inside"},
+            "Top, center, inside":  {"en": "Top, center, inside", "de": "Top, center, inside", "ru": "Top, center, inside"},
+            "Middle, left, inside": {"en": "Middle, left, inside", "de": "Middle, left, inside", "ru": "Middle, left, inside"},
+            "Middle, right, inside": {"en": "Middle, right, inside", "de": "Middle, right, inside", "ru": "Middle, right, inside"},
+            "Bottom, left, inside": {"en": "Bottom, left, inside", "de": "Bottom, left, inside", "ru": "Bottom, left, inside"},
+            "Bottom, right, inside": {"en": "Bottom, right, inside", "de": "Bottom, right, inside", "ru": "Bottom, right, inside"},
+            "Bottom, center, inside": {"en": "Bottom, center, inside", "de": "Bottom, center, inside", "ru": "Bottom, center, inside"},
+            "Top, right, outside": {"en": "Top, right, outside", "de": "Top, right, outside", "ru": "Top, right, outside"},
+            "Middle, right, outside": {"en": "Middle, right, outside", "de": "Middle, right, outside", "ru": "Middle, right, outside"},
+            "Bottom, right, outside": {"en": "Bottom, right, outside", "de": "Bottom, right, outside", "ru": "Bottom, right, outside"},
+            "Bottom, center, outside": {"en": "Bottom, center, outside", "de": "Bottom, center, outside", "ru": "Bottom, center, outside"},
+            "Minimum:":             {"en": "Minimum:", "de": "Minimum:", "ru": "Minimum:"},
+            "Maximum:":             {"en": "Maximum:", "de": "Maximum:", "ru": "Maximum:"},
+            "User defined names:":  {"en": "User defined names:", "de": "User defined names:", "ru": "User defined names:"},
+            "Predefined background:": {"en": "Predefined background:", "de": "Predefined background:", "ru": "Predefined background:"},
+            "User defined":         {"en": "User defined", "de": "User defined", "ru": "User defined"},
+            "Background:":          {"en": "Background:", "de": "Background:", "ru": "Background:"},
+            "Palette:":             {"en": "Palette:", "de": "Palette:", "ru": "Palette:"},
+            "User defined":         {"en": "User defined", "de": "User defined", "ru": "User defined"},
+            "Line thick:":          {"en": "Line thick:", "de": "Line thick:", "ru": "Line thick:"},
+            "Hover details:":       {"en": "Hover details:", "de": "Hover details:", "ru": "Hover details:"},
+            "Time format:":         {"en": "Time format:", "de": "Time format:", "ru": "Time format:"},
+            "Default":              {"en": "Default", "de": "Default", "ru": "Default"},
+            "Smoothing:":           {"en": "Smoothing:", "de": "Smoothing:", "ru": "Smoothing:"},
+            "Interpolation:":       {"en": "Interpolation:", "de": "Interpolation:", "ru": "Interpolation:"},
+            "default":              {"en": "default", "de": "default", "ru": "default"},
+            "linear":               {"en": "linear", "de": "linear", "ru": "linear"},
+            "step-after":           {"en": "step-after", "de": "step-after", "ru": "step-after"},
+            "cardinal":             {"en": "cardinal", "de": "cardinal", "ru": "cardinal"},
+            "basis":                {"en": "basis", "de": "basis", "ru": "basis"},
+            "Preview:":             {"en": "Preview:", "de": "Preview:", "ru": "Preview:"},
+            "After comma:":         {"en": "After comma:", "de": "After comma:", "ru": "After comma:"},
+            "Open":                 {"en": "Open", "de": "Open", "ru": "Open"},
+            "Reset settings":       {"en": "Reset settings", "de": "Reset settings", "ru": "Reset settings"},
+            "Select":               {"en": "Select", "de": "Select", "ru": "Select"},
+            "Cancel":               {"en": "Cancel", "de": "Cancel", "ru": "Cancel"},
+            "All":                  {"en": "All", "de": "All", "ru": "All"},
+            "ID":                   {"en": "ID", "de": "ID", "ru": "ID"},
+            "Name":                 {"en": "Name", "de": "Name", "ru": "Name"},
+            "Role":                 {"en": "Role", "de": "Role", "ru": "Role"},
+            "Room":                 {"en": "Room", "de": "Room", "ru": "Room"},
+            "Value":                {"en": "Value", "de": "Value", "ru": "Value"},
+            "Select ID":            {"en": "Select ID", "de": "Select ID", "ru": "Select ID"},
+            "none":                 {"en": "none", "de": "none", "ru": "none"}
+        };
+
 		var ids =     [];
 		var names =   ["Line 1", "Line 2", "Line 3"];
 		var colors =  ["#c05020", "#30c020", "#6060c0"];
@@ -245,7 +335,14 @@
             }
         });
 
-        function showIds() {
+        function updateCount() {
+            showIds(function () {
+                showNames();
+                showColors();
+            });
+        }
+
+        function showIds(callback) {
 			setTimeout(function () {			
 				var text = '';
 				var count = $('#ids_count').val();
@@ -270,7 +367,8 @@
                     $('#dialog-select-member').selectId('show', $('#ids_' + id).val(), undefined, function (newId) {
                         $('#ids_' + id).val(newId).trigger('change');
                     });
-                })
+                });
+                if (typeof callback == 'function') callback();
 			}, 100);
 		}
 	
@@ -348,6 +446,23 @@
 			var settings = getSettings();
 			$('#chart').attr('src', 'index.html?' + settings + '&' + (new Date()).getTime());
 			$('#link').val(location.href.replace('edit.html', 'index.html')+ '?' + settings);
+
+            // Store settings
+            if (typeof(Storage) !== "undefined") {
+                var config = {};
+                $('.value').each(function (index) {
+                    if ($(this).attr('type') == 'checkbox') {
+                        config[$(this).attr('id')] = $(this).prop('checked');
+                    } else {
+                        config[$(this).attr('id')] = $(this).val();
+                    }
+                });
+                config._ids = ids;
+                if ($('#names').prop('checked')) config._names = names;
+                if (!$('#palette').val()) config._colors = colors;
+
+                localStorage.setItem("rickshaw", JSON.stringify(config));
+            }
 		}
 	
 		$('.value').change(update).keyup(function () {$(this).trigger('change');});
@@ -362,10 +477,17 @@
 		
 		$('#width').spinner().on('spin', delayedUpdate);
 		$('#height').spinner().on('spin', delayedUpdate);
+        $('#min').spinner().on('spin', delayedUpdate);
+        $('#max').spinner().on('spin', delayedUpdate);
 		$('#smoothing').spinner().on('spin', delayedUpdate);
 		$('#strokeWidth').spinner().on('spin', delayedUpdate);
 		$('#afterComma').spinner().on('spin', delayedUpdate);
-		$('#ids_count').spinner().on('spin', showIds);
+		$('#ids_count').spinner().on('spin', function () {$(this).trigger('change');}).change(function () {
+            setTimeout(function () {
+                console.log('Value ' + $('#ids_count').val());
+                updateCount();
+            }, 300);
+        }).keyup(function () {$(this).trigger('change');});
 		$('#pre_bg').change(function() {
 			var val = $(this).val();			
 			$('#bg').val($(this).val());
@@ -387,11 +509,60 @@
             window.open($('#link').val());
         });
 
-		showNames();
-		showColors();
-		showIds();
+        var options;
+        if (typeof(Storage) !== "undefined") {
+            options = localStorage.getItem("rickshaw");
+            if (options) {
+                try {
+                    options = JSON.parse(options);
+                }
+                catch (e) {
+                    console.log('Cannot parse stored settings');
+                    options = null;
+                }
+            }
+        }
+        if (options && !options.reset && options.ids_count) {
+            $('#ids_count').val(options.ids_count);
+            if (options._ids) ids = options._ids;
+            if (options._names) names = options._names;
+            if (options._colors) colors = options._colors;
+        }
 
-		update();
+		showIds(function () {
+            showNames();
+            showColors();
+
+            if (typeof(Storage) !== "undefined") {
+                $('#clear').button({
+                    icons: {primary: 'ui-icon-trash'},
+                    text:  false
+                }).click(function () {
+                    localStorage.setItem("rickshaw", JSON.stringify({reset: true}));
+                    location.reload();
+                }).css({width: 22, height: 22});
+
+                if (options && !options.reset) {
+                    $('.value').each(function () {
+                        var $this = $(this);
+                        var id = $this.attr('id');
+                        if (options[id] !== undefined) {
+                            if ($this.attr('type') == 'checkbox') {
+                                $this.prop('checked', !!options[id]);
+                            } else {
+                                $this.val(options[id]);
+                            }
+                        }
+                    });
+                }
+            } else {
+                $('#clear').hide();
+            }
+
+            update();
+        });
+
+        translateAll();
 	</script>
 </body>
 </html>

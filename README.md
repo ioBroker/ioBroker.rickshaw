@@ -5,6 +5,10 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.1.6 (2015-03-04)
+* (bluefox) add min and max
+* (bluefox) add translation to russian (partly)
+
 ### 0.1.5 (2015-01-20)
 * (bluefox) update socket connection
 
