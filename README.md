@@ -5,7 +5,11 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
-### 0.1.6 (2015-03-04)
+### 0.2.1 (2015-03-07)
+* (bluefox) Convert boolean values to numbers
+* (bluefox) add translation to russian
+
+### 0.2.0 (2015-03-04)
 * (bluefox) add min and max
 * (bluefox) add translation to russian (partly)
 

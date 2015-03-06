@@ -179,52 +179,16 @@ function readOneChart(id, index, callback) {
             if (!err && res) {
                 //for (var i = 0, len = res.length; i < len; i++) {
                 for (var i = res.length - 1; i >= 0; i--) {
+                    // Convert boolean values to numbers
+                    if (res[i].val === 'true' || res[i].val === true) {
+                        res[i].val = 1;
+                    } else if (res[i].val === 'false' || res[i].val === false) {
+                        res[i].val = 0;
+                    }
                     seriesData[index].push({x: res[i].ts, y: res[i].val});
                 }
             }
             if (callback) callback(id, index);
-            /*console.log(data);
-
-            graph = new Rickshaw.Graph( {
-                element: document.querySelector("#chart"),
-                renderer: 'line',
-                width: 800,
-                height: 400,
-                series: [{
-                    name: name,
-                    color: 'steelblue',
-                    data: data
-                }]
-            });
-
-            var x_axis = new Rickshaw.Graph.Axis.Time({
-                graph: graph,
-                timeFixture: new Rickshaw.Fixtures.Time.Local()
-            });
-
-            var y_axis = new Rickshaw.Graph.Axis.Y({
-                graph: graph,
-                orientation: 'left',
-                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-                element: document.getElementById('y_axis')
-            });
-
-
-            var hoverDetail = new Rickshaw.Graph.HoverDetail({
-                graph: graph,
-                formatter: function(series, x, y) {
-                    var date = '<span class="date">' + new Date(x * 1000).toLocaleString() + '</span>';
-                    var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
-                    var content = swatch + series.name + ": " + y.toFixed(1) + unit + '<br>' + date;
-                    return content;
-                }
-            });
-
-
-
-
-            graph.render();*/
-
         });
 
     });
