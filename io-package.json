@@ -1,7 +1,7 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.2.1",
+        "version":      "0.2.2",
         "title":        "Rickshaw Charts",
         "desc":         {
             "en": "This adapter draws charts with Rickshaw in ioBroker.",
@@ -22,7 +22,8 @@
         "localLink":    "http://%ip%:%web_port%/rickshaw/edit.html",
         "enabled":      true,
         "onlyWWW":      true,
-        "singleton":    true
+        "singleton":    true,
+		"type":         "visualisation"
     },
     "native": {
 

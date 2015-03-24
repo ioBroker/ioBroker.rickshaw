@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.2.2 (2015-03-24)
+* (bluefox) Convert string values to numbers
+
 ### 0.2.1 (2015-03-07)
 * (bluefox) Convert boolean values to numbers
 * (bluefox) add translation to russian

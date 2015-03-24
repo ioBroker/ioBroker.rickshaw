@@ -185,6 +185,8 @@ function readOneChart(id, index, callback) {
                     } else if (res[i].val === 'false' || res[i].val === false) {
                         res[i].val = 0;
                     }
+					if (typeof res[i].val == 'string') res[i].val = parseFloat(res[i].val);
+					
                     seriesData[index].push({x: res[i].ts, y: res[i].val});
                 }
             }
