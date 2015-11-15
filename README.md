@@ -5,6 +5,9 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.3.0 (2015-11-15)
+* (bluefox) support of new history (multi history)
+
 ### 0.2.2 (2015-03-24)
 * (bluefox) Convert string values to numbers
 

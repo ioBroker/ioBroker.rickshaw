@@ -97,14 +97,6 @@ if (path.length > 1) {
 
 var seriesData = [];
 
-// set up our data series with random data points
-/*for (var i = 0; i < range; i++) {
-	random.addData(seriesData);
-}
-
-for (var i = 0; i < range; i++) {
-	seriesData[0][i].y = Math.sin(3.14159265 / range * i) * 150;
-}*/
 //var socket = io.connect();
 var socketURL = '';
 var socketSESSION = '';
@@ -154,13 +146,6 @@ socket.on('disconnect', function () {
         }, 5000);
     }
 });
-// After reconnect the "connect" event will be immediately called
-/*socket.on('reconnect', function () {
-    console.log('reconnect');
-});*/
-
-
-
 
 function readOneChart(id, index, callback) {
     socket.emit('getObject', id, function (err, res) {
@@ -175,10 +160,11 @@ function readOneChart(id, index, callback) {
         var start = Math.round((new Date()).getTime() / 1000)
         var end   = start;
         start -= (config.range * 60) || 31536000/* 1 year */;
-        socket.emit('getStateHistory', id, start, end, function (err, res) {
+
+        socket.emit('getHistory', id, {start: start, end: end, aggregate: 'average', count: 200, instance: config.instance || undefined}, function (err, res) {
             if (!err && res) {
-                //for (var i = 0, len = res.length; i < len; i++) {
-                for (var i = res.length - 1; i >= 0; i--) {
+                for (var i = 0, len = res.length; i < len; i++) {
+                //for (var i = res.length - 1; i >= 0; i--) {
                     // Convert boolean values to numbers
                     if (res[i].val === 'true' || res[i].val === true) {
                         res[i].val = 1;
@@ -254,8 +240,8 @@ function buildGraph() {
 
             series.push({
                 color: config.palette ? config.palette.color() : (config._colors[i] || 'black'),
-                data: seriesData[i],
-                name: (config._names ? config._names[i] : '') || ('Line ' + config._ids[i])
+                data:  seriesData[i],
+                name:  (config._names ? config._names[i] : '') || ('Line ' + config._ids[i])
             });
         }
     }
@@ -265,7 +251,7 @@ function buildGraph() {
     config.element     = document.getElementById("chart");
     config.series      = series;
 
-// Set default values
+    // Set default values
     config.renderer    = config.renderer || 'line';
     config.width       = config.width    || 960;
     config.height      = config.height   || 500;

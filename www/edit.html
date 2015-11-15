@@ -15,10 +15,10 @@
 
     <style>
 		.input {
-			width: 150;
+			width: 150px;
 		}
 		.label {
-			width: 150;
+			width: 150px;
 		}
 		.ui-widget input {
 			font-size: 14px;
@@ -88,6 +88,7 @@
 				<option value="scatterplot" class="translate">Scatter plot</option>
 				<option value="stack"       class="translate">Stack</option>
 			</select></td></tr>
+			<tr><td class="translate">History instance:</td><td><input id="instance" class="value input"/></td></tr>
 		</table></td>
 		<td class="axes header2" style="vertical-align:top"><table>
 			<tr><td class="translate label">Show axis bottom:</td><td><select class="value input" id="axeX">
@@ -328,7 +329,6 @@
         var objects = {};
         var states =  {};
 
-
         if (typeof sysLang !== undefined) systemLang = sysLang || 'en';
         $('#dialog-select-member').selectId('init', {
             filter: {
@@ -338,6 +338,7 @@
                     }
                 }
             },
+			noMultiselect: true,
             connCfg: {
                 socketUrl:     socketUrl,
                 socketSession: socketSession,
@@ -444,12 +445,13 @@
 				if ($(this).attr('type') == 'checkbox') {
 					config[$(this).attr('id')] = $(this).prop('checked');
 				} else {
-					config[$(this).attr('id')] = escape($(this).val());
+					config[$(this).attr('id')] = encodeURIComponent($(this).val());
 				}
 			});
-			config._ids = escape(ids.join(';'));
-			if ($('#names').prop('checked')) config._names = escape(names.join(';'));
-			if (!$('#palette').val()) config._colors = escape(colors.join(';'));
+			config._ids = encodeURIComponent(ids.join(';'));
+			if ($('#names').prop('checked')) config._names  = encodeURIComponent(names.join(';'));
+			if (!$('#palette').val())        config._colors = encodeURIComponent(colors.join(';'));
+
 			var text = '';
 			for(var opt in config) {
 				if (config[opt]) text += (text ? '&' : '') + opt + '=' + config[opt];
@@ -515,6 +517,7 @@
                 updateCount();
             }, 300);
         }).keyup(function () {$(this).trigger('change');}).parent().addClass('input');
+
 		$('#pre_bg').change(function() {
 			var val = $(this).val();			
 			$('#bg').val($(this).val());
@@ -527,9 +530,9 @@
 			delayedUpdate();
 		});
 		
-		$('#range').val("1440");
-		$('#axeX').val("lines");
-		$('#axeY').val("inside");
+		$('#range').val('1440');
+		$('#axeX').val('lines');
+		$('#axeY').val('inside');
 		$('#ids_count').val(1);
 
         $('#open').button().click(function () {
@@ -537,8 +540,23 @@
         });
 
         var options;
-        if (typeof(Storage) !== "undefined") {
-            options = localStorage.getItem("rickshaw");
+		// Try to extract options form URL
+		var url = window.location.href;
+		if (url.indexOf('?') != -1) {
+			options = {};
+			var parts = url.split('?');
+			var params = parts[1].split('&');
+			for (var p = 0; p < params.length; p++) {
+				parts = params[p].split('=');
+				options[parts[0]] = decodeURIComponent(parts[1]);
+				if (parts[0] == '_ids' || parts[0] == '_names' || parts[0] == '_colors') {
+					options[parts[0]] = options[parts[0]].split(';');
+					if (parts[0] == '_ids') options.ids_count = options[parts[0]].length;
+				}
+			}
+		} else
+        if (typeof Storage !== 'undefined') {
+            options = localStorage.getItem('rickshaw');
             if (options) {
                 try {
                     options = JSON.parse(options);
@@ -549,10 +567,11 @@
                 }
             }
         }
+
         if (options && !options.reset) {
             $('#ids_count').val(options.ids_count || 1);
-            if (options._ids) ids = options._ids;
-            if (options._names) names = options._names;
+            if (options._ids)    ids    = options._ids;
+            if (options._names)  names  = options._names;
             if (options._colors) colors = options._colors;
         }
 
@@ -560,7 +579,7 @@
             showNames();
             showColors();
 
-            if (typeof(Storage) !== "undefined") {
+            if (typeof Storage !== 'undefined') {
                 $('#clear').button({
                     icons: {primary: 'ui-icon-trash'},
                     text:  false
