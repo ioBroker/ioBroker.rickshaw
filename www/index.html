@@ -13,7 +13,7 @@
     <script src="/_socket/info.js"></script>
 	<style>
 		.rickshaw_graph .x_tick.invisible {
-			border-left: 0px rgba(0, 0, 0, 0) !important;
+			border-left: 0 rgba(0, 0, 0, 0) !important;
 		}
 		#title {
 			font-size: 24px;
@@ -25,12 +25,12 @@
         #chart {
             display: inline-block;
         }
-        #legend_container {
+        /*#legend_container {
             position: absolute;
             right: 0;
             bottom: 26px;
             width: 0;
-        }
+        }*/
         #chart_container {
             float: left;
             position: relative;
@@ -50,7 +50,7 @@
 	<div id="preview" style='display:none'></div>
 	<div id="legend" style="position:absolute"></div>
 	<div id="title" style="position:absolute"></div>
-    <div id="no-connection" style="position:absolute; left:50%; top: 50%; display:none; font-size: 3em; background: rgba(0,0,0,0.1); border-radius: 10; text-align: center">No connection to server</div>
+    <div id="no-connection" style="position:absolute; left:50%; top: 50%; display:none; font-size: 3em; background: rgba(0,0,0,0.1); border-radius: 10px; text-align: center">No connection to server</div>
 </div>
 
 <script>
@@ -81,7 +81,7 @@ var config = {
 	_names:    [],
 	offset:   'zero',
 	stack:    false
-}
+};
 
 // Analyse query
 var path = location.href;
@@ -90,8 +90,8 @@ if (path.length > 1) {
 	path = path[1].split('&');
 	for (var i = 0; i < path.length; i++) {
 		var parts = path[i].split('=');
-		config[parts[0]] = (parts[1] !== undefined) ? unescape(parts[1]) : true;
-		if (parts[0][0] == '_') config[parts[0]] = unescape(config[parts[0]]).split(';');
+		config[parts[0]] = (parts[1] !== undefined) ? decodeURIComponent(parts[1]) : true;
+		if (parts[0][0] == '_') config[parts[0]] = decodeURIComponent(config[parts[0]]).split(';');
 	}
 }
 
@@ -116,7 +116,7 @@ var socket = io.connect(socketURL, {
 
 socket.on('stateChange', function (changeId, state) {
     if (graph && config && config._ids) {
-        for (j = 0; j < config._ids.length; j++) {
+        for (var j = 0; j < config._ids.length; j++) {
             if (config._ids[j] == changeId) {
                 seriesData[j].push({x: state.ts, y: state.val});
                 graph.update();
@@ -157,7 +157,7 @@ function readOneChart(id, index, callback) {
             config._units[index] = '';
         }
         socket.emit('subscribe', id);
-        var start = Math.round((new Date()).getTime() / 1000)
+        var start = Math.round((new Date()).getTime() / 1000);
         var end   = start;
         start -= (config.range * 60) || 31536000/* 1 year */;
 
@@ -210,12 +210,13 @@ function readData() {
         var range  = config.range || 150;
 
         seriesData.push([]);
+        var i;
         // set up our data series with random data points
-        for (var i = 0; i < range; i++) {
+        for (i = 0; i < range; i++) {
             random.addData(seriesData);
         }
 
-        for (var i = 0; i < range; i++) {
+        for (i = 0; i < range; i++) {
            seriesData[0][i].y = Math.sin(3.14159265 / range * i) * 150;
         }
     }
@@ -234,8 +235,8 @@ function buildGraph() {
         // Find minimum for all grafics
         if (min === null) min = seriesData[i] ? seriesData[i][0].y : 0;
         if (seriesData[i]) {
-            for (var t = 0; t < seriesData[i].length; t++) {
-                if (min > seriesData[i][t].y) min = seriesData[i][t].y;
+            for (var u = 0; u < seriesData[i].length; u++) {
+                if (min > seriesData[i][u].y) min = seriesData[i][u].y;
             }
 
             series.push({
@@ -262,8 +263,8 @@ function buildGraph() {
     config.afterComma  = (config.afterComma === undefined) ? 2: config.afterComma;
     config.timeFixture =  new Rickshaw.Fixtures.Time.Local();
     config.interpolation = config.interpolation || 'linear';
-    config.min         = (config.min !== undefined && config.min != '' && parseFloat(config.min) != NaN) ? parseFloat(config.min) : min;
-    if ((config.max !== undefined && config.max != '' && parseFloat(config.max) != NaN)) {
+    config.min         = (config.min !== undefined && config.min != '' && parseFloat(config.min).toString() != 'NaN') ? parseFloat(config.min) : min;
+    if ((config.max !== undefined && config.max != '' && parseFloat(config.max).toString() != 'NaN')) {
         config.max     = parseFloat(config.max);
     }
 // Replace background
@@ -284,6 +285,7 @@ function buildGraph() {
                 return d3.time.format(config.timeFormat)(new Date(x * 1000));
             },
             yFormatter: function(y) {
+                if (y === null) return null;
                 if (config.useComma) {
                     return y.toFixed(config.afterComma).toString().replace('.', ',');
                 } else {
@@ -308,10 +310,10 @@ function buildGraph() {
             element: document.getElementById('legend')
         } );
 
-        var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+        /*var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
             graph:  graph,
             legend: legend
-        } );
+        } );*/
 
         var parts = config.legend.split(';');
         var css = {};
@@ -338,12 +340,12 @@ function buildGraph() {
             } else	{
                 css[p[0]] = p[1];
             }
-        };
+        }
         $('#legend').css(css);
     }
 
     if (config.title) {
-        $('#title').html(unescape(config.title));
+        $('#title').html(decodeURIComponent(config.title));
         if (config.title_pos) {
             var parts = config.title_pos.split(';');
             var css = {}
@@ -370,7 +372,7 @@ function buildGraph() {
                 } else	{
                     css[p[0]] = p[1];
                 }
-            };
+            }
             $('#title').css(css);
         }
     }
@@ -379,15 +381,15 @@ function buildGraph() {
         var format = function(d) {
             d = new Date(d);
             return d3.time.format("%c")(d);
-        }
+        };
 
         if (config.axeX == "lines") {
-            var xAxis = new Rickshaw.Graph.Axis.Time( {
+            var xAxis = new Rickshaw.Graph.Axis.Time({
                 graph: graph,
                 ticksTreatment: 'glow',
                 //tickFormat: format,
                 timeFixture: new Rickshaw.Fixtures.Time.Local()
-            } );
+            });
             xAxis.render();
 
         } else if (config.axeX == "nolines"){
@@ -415,7 +417,7 @@ function buildGraph() {
 
             yAxis1.render();
             if (config.axeY.indexOf('nolines') != -1) $('.y_grid').hide();
-            if (config._units[0]) $('#chart').append('<div style="position:absolute; top:0; left: 5">' + config._units[0] + '</div>');
+            if (config._units[0]) $('#chart').append('<div style="position:absolute; top:0; left: 5px">' + config._units[0] + '</div>');
 
         } else if (config.axeY.indexOf('outside') != -1) {
             var yAxis1 = new Rickshaw.Graph.Axis.Y( {
@@ -433,7 +435,7 @@ function buildGraph() {
             $('#chart').css({left: config.left});
             if (config.axeY.indexOf('nolines') != -1) $('.y_grid').hide();
 
-            if (config._units[0]) $('#y_axis_1').append('<div style="position:absolute; top:0; right: 5">' + config._units[0] + '</div>');
+            if (config._units[0]) $('#y_axis_1').append('<div style="position:absolute; top:0; right: 5px">' + config._units[0] + '</div>');
         }
     }
 
@@ -485,7 +487,7 @@ function buildGraph() {
     }
 
     if (config.preview && config.preview !== 'false') {
-        $p = $('#preview').show();
+        var $p = $('#preview').show();
         var preview = new Rickshaw.Graph.RangeSlider( {
             graph: graph,
             element: $p[0]
