@@ -27,7 +27,7 @@
             font-weight: bold;
         }
         body {
-            font-family: Arial
+            font-family: Arial;
         }
         .header1{
             background: rgba(150, 150, 255, 0.100);
@@ -88,7 +88,7 @@
 				<option value="scatterplot" class="translate">Scatter plot</option>
 				<option value="stack"       class="translate">Stack</option>
 			</select></td></tr>
-			<tr><td class="translate">History instance:</td><td><input id="instance" class="value input"/></td></tr>
+			<tr><td class="translate">History instance:</td><td><select id="instance" class="value input"></select></td></tr>
 		</table></td>
 		<td class="axes header2" style="vertical-align:top"><table>
 			<tr><td class="translate label">Show axis bottom:</td><td><select class="value input" id="axeX">
@@ -202,7 +202,7 @@
 	<tr><td colspan=5>&nbsp;</td></tr>
 	<tr>
 		<td colspan=5>
-			Link:<input type="text" id="link" style="width:85%"><button style="padding-left: 10" id="open" class="translateB">Open</button>
+			Link:<input type="text" id="link" style="width:85%"><button style="padding-left: 10px" id="open" class="translateB">Open</button>
 		</td>
 	</tr>
 	</table>
@@ -213,7 +213,7 @@
 	<tr><td class="translate">Annotate:</td><td>     <input type="checkbox" class="value" id="annotate"></td></tr-->
 	</table>
 	<hr>
-	<iframe src="index.html" style="width: 100%; bottom: 0; height: 500" id="chart"></iframe>
+	<iframe src="index.html" style="width: 100%; bottom: 0; height: 500px" id="chart"></iframe>
     <div id="dialog-select-member" style="display:none"></div>
 	<script>
         "use strict";
@@ -320,16 +320,18 @@
             "Inside / With lines":  {"en": "Inside / With lines",   "de": "Inside / With lines",    "ru": "Внутри / С линиями"},
             "Outside/ With lines":  {"en": "Outside/ With lines",   "de": "Outside/ With lines",    "ru": "Снаружи/ С линиями"},
             "Inside / No lines":    {"en": "Inside / No lines",     "de": "Inside / No lines",      "ru": "Внутри / Без линий"},
-            "Outside / No lines":   {"en": "Outside / No lines",    "de": "Outside / No lines",     "ru": "Снаружи / Без линий"}
-        };
+            "Outside / No lines":   {"en": "Outside / No lines",    "de": "Outside / No lines",     "ru": "Снаружи / Без линий"},
+			"History instance:": 	{"en": "History instance:", 	"de": "History-Instanz:", 		"ru": "Источник:"}
+		};
 
-		var ids =     [];
-		var names =   ["Line 1", "Line 2", "Line 3"];
-		var colors =  ["#c05020", "#30c020", "#6060c0"];
-        var objects = {};
-        var states =  {};
+		var ids =       [];
+		var names =     ["Line 1", "Line 2", "Line 3"];
+		var colors =    ["#c05020", "#30c020", "#6060c0"];
+        var objects =   {};
+        var states =    {};
+		var instances = [];
 
-        if (typeof sysLang !== undefined) systemLang = sysLang || 'en';
+        if (typeof sysLang !== 'undefined') systemLang = sysLang || 'en';
         $('#dialog-select-member').selectId('init', {
             filter: {
                 common: {
@@ -575,38 +577,75 @@
             if (options._colors) colors = options._colors;
         }
 
-		showIds(function () {
-            showNames();
-            showColors();
+		// Read instances
+		var socket = io.connect(socketUrl, {
+			'query':                        'key=' + socketSession,
+			'reconnection limit':           10000,
+			'max reconnection attempts':    Infinity
+		});
 
-            if (typeof Storage !== 'undefined') {
-                $('#clear').button({
-                    icons: {primary: 'ui-icon-trash'},
-                    text:  false
-                }).click(function () {
-                    localStorage.setItem("rickshaw", JSON.stringify({reset: true}));
-                    location.reload();
-                }).css({width: 22, height: 22});
+		socket.on('connect', function () {
+			this.emit('name', 'rickshawEdit');
+			// load history instances
+			socket.emit('getObjectView', 'system', 'instance', {startkey: 'system.adapter.', endkey: 'system.adapter.\u9999'}, function (err, doc) {
+				if (!err && doc && doc.rows) {
+					if (doc.rows.length === 0) {
+						if (callback) callback ([]);
+					} else {
+						var res = [];
+						for (var i = 0; i < doc.rows.length; i++) {
+							var obj = doc.rows[i].value;
+							if (obj && obj.type === 'instance' && obj.common && obj.common.type === 'storage') {
+								instances.push(obj._id.substring('system.adapter.'.length));
+							}
+						}
+					}
+				}
 
-                if (options && !options.reset) {
-                    $('.value').each(function () {
-                        var $this = $(this);
-                        var id = $this.attr('id');
-                        if (options[id] !== undefined) {
-                            if ($this.attr('type') == 'checkbox') {
-                                $this.prop('checked', !!options[id]);
-                            } else {
-                                $this.val(options[id]);
-                            }
-                        }
-                    });
-                }
-            } else {
-                $('#clear').hide();
-            }
+				var textInstances = '<option value="">' + _('default') + '</option>\n';
+				for (var t = 0; t < instances.length; t++) {
+					textInstances += '<option value="' + instances[t] + '">' + instances[t] + '</option>\n';
+				}
+				$('#instance').html(textInstances).val(options.instance);
 
-            update();
-        });
+				showIds(function () {
+					showNames();
+					showColors();
+
+					if (typeof Storage !== 'undefined') {
+						$('#clear').button({
+							icons: {primary: 'ui-icon-trash'},
+							text:  false
+						}).click(function () {
+							localStorage.setItem('rickshaw', JSON.stringify({reset: true}));
+							location.reload();
+						}).css({width: 22, height: 22});
+
+						if (options && !options.reset) {
+							$('.value').each(function () {
+								var $this = $(this);
+								var id = $this.attr('id');
+								if (options[id] !== undefined) {
+									if ($this.attr('type') == 'checkbox') {
+										$this.prop('checked', !!options[id]);
+									} else {
+										$this.val(options[id]);
+									}
+								}
+							});
+						}
+					} else {
+						$('#clear').hide();
+					}
+
+					update();
+				});
+
+				// not need to disconnect, because socket-io uses pool
+				//socket.disconnect();
+				//socket = null;
+			});
+		});
 
         translateAll();
 
