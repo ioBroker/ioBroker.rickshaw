@@ -1,7 +1,7 @@
 {
   "name": "iobroker.rickshaw",
   "description": "This adapter draws charts with Rickshaw in ioBroker.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "bluefox <bluefox@ccu.io>",
   "contributors": [
     "bluefox <bluefox@ccu.io>"

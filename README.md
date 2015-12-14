@@ -5,6 +5,11 @@ ioBroker.rickshaw
 draw charts with rickshaw
 
 ## Changelog
+### 0.3.1 (2015-12-14)
+* (bluefox) fix error if value is null
+* (bluefox) fix empty data
+* (bluefox) implement instances list
+
 ### 0.3.0 (2015-11-15)
 * (bluefox) support of new history (multi history)
 
