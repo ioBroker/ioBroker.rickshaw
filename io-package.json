@@ -18,12 +18,13 @@
         "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
         "readme":       "https://github.com/ioBroker/ioBroker.rickshaw/blob/master/README.md",
         "loglevel":     "info",
-        "dependencies": [{"history": ">=0.2.0"}, {"web": ">=1.2.2"}],
+        "dependencies": [{"web": ">=1.2.2"}],
         "localLink":    "%web_protocol%://%ip%:%web_port%/rickshaw/edit.html",
         "enabled":      true,
         "onlyWWW":      true,
         "singleton":    true,
-		"type":         "visualisation"
+		"type":         "visualisation",
+		"noConfig":     true
     },
     "native": {
 
