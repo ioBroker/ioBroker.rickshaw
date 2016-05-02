@@ -118,6 +118,7 @@ socket.on('stateChange', function (changeId, state) {
     if (graph && config && config._ids) {
         for (var j = 0; j < config._ids.length; j++) {
             if (config._ids[j] == changeId) {
+                if (state.ts > 946681200000) state.ts = Math.round(state.ts / 1000);
                 seriesData[j].push({x: state.ts, y: state.val});
                 graph.update();
                 break;
@@ -157,14 +158,16 @@ function readOneChart(id, index, callback) {
             config._units[index] = '';
         }
         socket.emit('subscribe', id);
-        var start = Math.round((new Date()).getTime() / 1000);
+        var start = (new Date()).getTime();
         var end   = start;
-        start -= (config.range * 60) || 31536000/* 1 year */;
+        start -= (config.range * 60000) || 31536000000/* 1 year */;
 
         socket.emit('getHistory', id, {start: start, end: end, aggregate: 'average', count: 200, instance: config.instance || undefined}, function (err, res) {
-            if (!err && res) {
+            if (err) window.alert(err);
+			if (!err && res) {
                 for (var i = 0, len = res.length; i < len; i++) {
-                //for (var i = res.length - 1; i >= 0; i--) {
+                    // if less 2000.01.01 00:00:00
+                    if (res[i].ts > 946681200000) res[i].ts = Math.round(res[i].ts / 1000);
                     // Convert boolean values to numbers
                     if (res[i].val === 'true' || res[i].val === true) {
                         res[i].val = 1;
@@ -250,7 +253,7 @@ function buildGraph() {
 
     if (min > 0) min = 0;
 
-    config.element     = document.getElementById("chart");
+    config.element     = document.getElementById('chart');
     config.series      = series;
 
     // Set default values
@@ -258,24 +261,24 @@ function buildGraph() {
     config.width       = config.width    || 960;
     config.height      = config.height   || 500;
     config.left        = 0;
-    config.timeFormat  = config.timeFormat || "%H:%M:%S %e.%m.%y";
+    config.timeFormat  = config.timeFormat || '%H:%M:%S %e.%m.%y';
     config._units      = config._units || [];
     config.useComma    = (config.useComma   === undefined) ? true: config.useComma;
     config.afterComma  = (config.afterComma === undefined) ? 2: config.afterComma;
     config.timeFixture =  new Rickshaw.Fixtures.Time.Local();
     config.interpolation = config.interpolation || 'linear';
-    config.min         = (config.min !== undefined && config.min != '' && parseFloat(config.min).toString() != 'NaN') ? parseFloat(config.min) : min;
-    if ((config.max !== undefined && config.max != '' && parseFloat(config.max).toString() != 'NaN')) {
+    config.min         = (config.min !== undefined && config.min != '' && !isNaN(config.min)) ? parseFloat(config.min) : min;
+    if ((config.max !== undefined && config.max != '' && !isNaN(config.max))) {
         config.max     = parseFloat(config.max);
     }
-// Replace background
+    // Replace background
     if (config.bg && config.bg.length < 3 && backgrounds[config.bg]) config.bg = backgrounds[config.bg];
 
     if (config.bg) {
         $('body').css({background: config.bg});
     }
 
-// instantiate our graph!
+    // instantiate our graph!
     graph = new Rickshaw.Graph(config);
     graph.render();
 
@@ -379,26 +382,25 @@ function buildGraph() {
     }
 
     if (config.axeX) {
-        var format = function(d) {
+        /*var format = function(d) {
             d = new Date(d);
-            return d3.time.format("%c")(d);
-        };
+            return d3.time.format('%c')(d);
+        };*/
 
-        if (config.axeX == "lines") {
+        if (config.axeX == 'lines') {
             var xAxis = new Rickshaw.Graph.Axis.Time({
-                graph: graph,
+                graph:          graph,
                 ticksTreatment: 'glow',
-                //tickFormat: format,
-                timeFixture: new Rickshaw.Fixtures.Time.Local()
+                //tickFormat:   format,
+                timeFixture:    new Rickshaw.Fixtures.Time.Local()
             });
             xAxis.render();
-
-        } else if (config.axeX == "nolines"){
+        } else if (config.axeX == 'nolines'){
             var xAxis = new Rickshaw.Graph.Axis.Time( {
-                graph: graph,
+                graph:          graph,
                 ticksTreatment: 'invisible',
-                //tickFormat: format,
-                timeFixture: new Rickshaw.Fixtures.Time.Local()
+                //tickFormat:   format,
+                timeFixture:    new Rickshaw.Fixtures.Time.Local()
             } );
             xAxis.render();
         }
@@ -445,12 +447,12 @@ function buildGraph() {
 
         if (config.axeY2.indexOf('inside') != -1) {
             var yAxis2 = new Rickshaw.Graph.Axis.Y( {
-                graph: graph,
-                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                graph:          graph,
+                tickFormat:     Rickshaw.Fixtures.Number.formatKMBT,
                 ticksTreatment: ticksTreatment,
-                grid:false,
-                orientation: 'left',
-                element: document.getElementById('y_axis_2')
+                grid:           false,
+                orientation:    'left',
+                element:        document.getElementById('y_axis_2')
             } );
 
             yAxis2.render();
@@ -463,12 +465,12 @@ function buildGraph() {
 
         } else if (config.axeY2.indexOf('outside') != -1) {
             var yAxis2 = new Rickshaw.Graph.Axis.Y( {
-                graph: graph,
-                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                graph:          graph,
+                tickFormat:     Rickshaw.Fixtures.Number.formatKMBT,
                 ticksTreatment: ticksTreatment,
-                orientation: 'right',
-                grid:false,
-                element: document.getElementById('y_axis_2')
+                orientation:    'right',
+                grid:           false,
+                element:        document.getElementById('y_axis_2')
             } );
 
             yAxis2.render();

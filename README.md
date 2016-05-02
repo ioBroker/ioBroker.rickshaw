@@ -2,9 +2,25 @@
 ioBroker.rickshaw
 =================
 
-draw charts with rickshaw
+[![NPM version](http://img.shields.io/npm/v/iobroker.rickshaw.svg)](https://www.npmjs.com/package/iobroker.rickshaw)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.rickshaw.svg)](https://www.npmjs.com/package/iobroker.rickshaw)
+
+[![NPM](https://nodei.co/npm/iobroker.rickshaw.png?downloads=true)](https://nodei.co/npm/iobroker.rickshaw/)
+
+
+Draw charts with [rickshaw](http://code.shutterstock.com/rickshaw/examples/).
+
+## How to use
+- install "socketio"-adapter and create one instance
+- install "web"-adapter and create one instance.
+- Select in settings of "web"-adapter the instance of installed "socket.io"-instance.
+- install "rickshaw"-adapter and call
+- Go to http://ip:8082/rickshaw/edit.html
 
 ## Changelog
+### 0.4.0 (2016-05-02)
+* (bluefox) support of ms
+
 ### 0.3.1 (2015-12-14)
 * (bluefox) fix error if value is null
 * (bluefox) fix empty data
@@ -59,11 +75,3 @@ draw charts with rickshaw
 
 ### 0.0.2 (2014-11-24)
 * (bluefox) usable adapter
-
-
-### How to use
-- install "socketio"-adapter and create one instance
-- install "web"-adapter and create one instance.
-- Select in settings of "web"-adapter the instance of installed "socket.io"-instance.
-- install "rickshaw"-adapter and call
-- Go to http://ip:8082/rickshaw/edit.html
