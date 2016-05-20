@@ -18,6 +18,9 @@ Draw charts with [rickshaw](http://code.shutterstock.com/rickshaw/examples/).
 - Go to http://ip:8082/rickshaw/edit.html
 
 ## Changelog
+### 0.4.1 (2016-05-20)
+* (bluefox) change default aggregation name
+
 ### 0.4.0 (2016-05-02)
 * (bluefox) support of ms
 

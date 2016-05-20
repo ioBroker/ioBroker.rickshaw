@@ -479,7 +479,7 @@
 			$('#link').val(location.href.replace('edit.html', 'index.html')+ '?' + settings);
 
             // Store settings
-            if (typeof(Storage) !== "undefined") {
+            if (typeof Storage !== 'undefined') {
                 var config = {};
                 $('.value').each(function (index) {
                     if ($(this).attr('type') == 'checkbox') {
@@ -492,7 +492,7 @@
                 if ($('#names').prop('checked')) config._names = names;
                 if (!$('#palette').val()) config._colors = colors;
 
-                localStorage.setItem("rickshaw", JSON.stringify(config));
+                localStorage.setItem('rickshaw', JSON.stringify(config));
             }
 		}
 	

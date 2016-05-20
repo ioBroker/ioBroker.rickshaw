@@ -1,15 +1,20 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.4.0",
+        "version":      "0.4.1",
         "title":        "Rickshaw Charts",
         "desc":         {
             "en": "This adapter draws charts with Rickshaw in ioBroker.",
             "de": "Adapter benutzt Rickshaw-Module um Grafiken zu zeichnen.",
             "ru": "Драйвер строит графики с помощью Rickshaw"
         },
+        "news": {
+            "en": "(bluefox) change default aggregation name",
+            "de": "(bluefox) change default aggregation name",
+            "ru": "(bluefox) change default aggregation name"
+        },
         "authors": [
-            "bluefox <bluefox@ccu.io>"
+            "bluefox <dogafox@gmail.com.io>"
         ],
         "platform":     "javascript/Node.js",
         "icon":         "rickshaw.png",

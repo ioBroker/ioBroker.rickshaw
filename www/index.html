@@ -162,12 +162,19 @@ function readOneChart(id, index, callback) {
         var end   = start;
         start -= (config.range * 60000) || 31536000000/* 1 year */;
 
-        socket.emit('getHistory', id, {start: start, end: end, aggregate: 'average', count: 200, instance: config.instance || undefined}, function (err, res) {
+        socket.emit('getHistory', id, {
+            start:      start,
+            end:        end,
+            aggregate:  config.aggregate || 'minmax',
+            count:      200,
+            instance:   config.instance || undefined
+        }, function (err, res) {
             if (err) window.alert(err);
 			if (!err && res) {
                 for (var i = 0, len = res.length; i < len; i++) {
                     // if less 2000.01.01 00:00:00
                     if (res[i].ts > 946681200000) res[i].ts = Math.round(res[i].ts / 1000);
+
                     // Convert boolean values to numbers
                     if (res[i].val === 'true' || res[i].val === true) {
                         res[i].val = 1;
