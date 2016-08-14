@@ -1,18 +1,26 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.4.1",
+        "version":      "0.4.2",
+        "news": {
+			"0.4.2": {
+                "en":               "support of web-sockets force",
+                "de":               "support of web-sockets force",
+                "ru":               "support of web-sockets force"
+            },
+			"0.4.1": {
+                "en":               "change default aggregation name",
+                "de":               "change default aggregation name",
+                "ru":               "change default aggregation name"
+            }
+        },
         "title":        "Rickshaw Charts",
         "desc":         {
             "en": "This adapter draws charts with Rickshaw in ioBroker.",
             "de": "Adapter benutzt Rickshaw-Module um Grafiken zu zeichnen.",
             "ru": "Драйвер строит графики с помощью Rickshaw"
         },
-        "news": {
-            "en": "(bluefox) change default aggregation name",
-            "de": "(bluefox) change default aggregation name",
-            "ru": "(bluefox) change default aggregation name"
-        },
+
         "authors": [
             "bluefox <dogafox@gmail.com.io>"
         ],
@@ -23,7 +31,7 @@
         "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
         "readme":       "https://github.com/ioBroker/ioBroker.rickshaw/blob/master/README.md",
         "loglevel":     "info",
-        "dependencies": [{"web": ">=1.2.2"}],
+        "dependencies": [{"web": ">=1.5.4"}],
         "localLink":    "%web_protocol%://%ip%:%web_port%/rickshaw/edit.html",
         "enabled":      true,
         "onlyWWW":      true,

@@ -109,9 +109,13 @@ if (typeof socketUrl != 'undefined') {
 }
 
 var socket = io.connect(socketURL, {
-    'query': 'key=' + socketSESSION,
-    'reconnection limit': 10000,
-    'max reconnection attempts': Infinity
+    'query': 						'key=' + socketSESSION,
+    'reconnection limit': 			10000,
+    'max reconnection attempts': 	Infinity,
+    upgrade:                        typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+    rememberUpgrade:                typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets  : undefined,
+    transports:                     typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
+
 });
 
 socket.on('stateChange', function (changeId, state) {
