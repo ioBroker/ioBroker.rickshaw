@@ -11,7 +11,6 @@
     <script type="text/javascript" src="/lib/js/socket.io.js"></script>
 
     <script type="text/javascript" src="/_socket/info.js"></script>
-    <script type="text/javascript" src="js/words.js"></script><!--this file must be after translate.js -->
 
     <style>
 		.input {
@@ -27,7 +26,7 @@
             font-weight: bold;
         }
         body {
-            font-family: Arial;
+            font-family: Arial, sans-serif;
         }
         .header1{
             background: rgba(150, 150, 255, 0.100);
@@ -78,6 +77,15 @@
 				<option value="525600"  class="translate">1 Year</option>
 				<option value="1051200" class="translate">2 Years</option>
 			</select></td></tr>
+			<tr><td class="translate">Aggregate:</td><td><select id="aggregate" class="value input">
+				<option value="minmax"   class="translate">minmax</option>
+				<option value="min"      class="translate">min</option>
+				<option value="max"      class="translate">max</option>
+				<option value="average"  class="translate">average</option>
+				<option value="onchange" class="translate">onchange</option>
+				<option value="total"    class="translate">total</option>
+			</select></td></tr>
+			<tr><td class="translate">Counts:</td><td> <input id="count" class="value input"></td></tr>
 			<tr><td class="translate">Width:</td><td> <input id="width" class="value input"></td></tr>
 			<tr><td class="translate">Height:</td><td><input id="height" class="value input"></td></tr>
 			<tr><td class="translate">Chart type:</td><td><select id="renderer" class="value input">
@@ -216,49 +224,49 @@
 	<iframe src="index.html" style="width: 100%; bottom: 0; height: 500px" id="chart"></iframe>
     <div id="dialog-select-member" style="display:none"></div>
 	<script>
-        "use strict";
+        'use strict';
 
         systemDictionary = {
-            "Input data":           {"en": "Input data",            "de": "Input data",             "ru": "Входные данные"},
-            "Legend and Axes":      {"en": "Legend and Axes",       "de": "Legend and Axes",        "ru": "Легенда и оси"},
-            "Names":                {"en": "Names",                 "de": "Names",                  "ru": "Имена графиков"},
-            "Colors":               {"en": "Colors",                "de": "Colors",                 "ru": "Цвета графиков"},
-            "Options":              {"en": "Options",               "de": "Options",                "ru": "Опции"},
-            "Datapoints:":          {"en": "Datapoints:",           "de": "Datapoints:",            "ru": "Данные:"},
+            "Input data":           {"en": "Input data",            "de": "Eingangs data",          "ru": "Входные данные"},
+            "Legend and Axes":      {"en": "Legend and Axes",       "de": "Legende und Axes",       "ru": "Легенда и оси"},
+            "Names":                {"en": "Names",                 "de": "Namen",                  "ru": "Имена графиков"},
+            "Colors":               {"en": "Colors",                "de": "Farben",                 "ru": "Цвета графиков"},
+            "Options":              {"en": "Options",               "de": "Optionen",               "ru": "Опции"},
+            "Datapoints:":          {"en": "Datapoints:",           "de": "Datenpunkte:",           "ru": "Данные:"},
             "Range:":               {"en": "Range:",                "de": "Range:",                 "ru": "Интервал:"},
-            "10 Minutes":           {"en": "10 Minutes",            "de": "10 Minutes",             "ru": "10 Минут"},
-            "30 Minutes":           {"en": "30 Minutes",            "de": "30 Minutes",             "ru": "30 Минут"},
-            "1 Hour":               {"en": "1 Hour",                "de": "1 Hour",                 "ru": "1 час"},
-            "2 Hours":              {"en": "2 Hours",               "de": "2 Hours",                "ru": "2 часа"},
-            "3 Hours":              {"en": "3 Hours",               "de": "3 Hours",                "ru": "3 часа"},
-            "6 Hours":              {"en": "6 Hours",               "de": "6 Hours",                "ru": "6 часов"},
-            "12 Hours":             {"en": "12 Hours",              "de": "12 Hours",               "ru": "12 часов"},
-            "1 Day":                {"en": "1 Day",                 "de": "1 Day",                  "ru": "1 день"},
-            "2 Days":               {"en": "2 Days",                "de": "2 Days",                 "ru": "2 дня"},
-            "3 Days":               {"en": "3 Days",                "de": "3 Days",                 "ru": "3 дня"},
-            "7 Days":               {"en": "7 Days",                "de": "7 Days",                 "ru": "7 дней"},
-            "14 Days":              {"en": "14 Days",               "de": "14 Days",                "ru": "14 дней"},
-            "1 Month":              {"en": "1 Month",               "de": "1 Month",                "ru": "1 месяц"},
-            "2 Months":             {"en": "2 Months",              "de": "2 Months",               "ru": "2 месяца"},
-            "3 Months":             {"en": "3 Months",              "de": "3 Months",               "ru": "3 месяца"},
-            "6 Months":             {"en": "6 Months",              "de": "6 Months",               "ru": "6 месяцев"},
-            "1 Year":               {"en": "1 Year",                "de": "1 Year",                 "ru": "1 год"},
-            "2 Years":              {"en": "2 Years",               "de": "2 Years",                "ru": "2 года"},
-            "Width:":               {"en": "Width:",                "de": "Width:",                 "ru": "Ширина:"},
-            "Height:":              {"en": "Height:",               "de": "Height:",                "ru": "Выстоа:"},
-            "Chart type:":          {"en": "Chart type:",           "de": "Chart type:",            "ru": "Тип графика:"},
+            "10 Minutes":           {"en": "10 Minutes",            "de": "10 Minuten",             "ru": "10 Минут"},
+            "30 Minutes":           {"en": "30 Minutes",            "de": "30 Minuten",             "ru": "30 Минут"},
+            "1 Hour":               {"en": "1 Hour",                "de": "1 Stunde",               "ru": "1 час"},
+            "2 Hours":              {"en": "2 Hours",               "de": "2 Stunden",              "ru": "2 часа"},
+            "3 Hours":              {"en": "3 Hours",               "de": "3 Stunden",              "ru": "3 часа"},
+            "6 Hours":              {"en": "6 Hours",               "de": "6 Stunden",              "ru": "6 часов"},
+            "12 Hours":             {"en": "12 Hours",              "de": "12 Stunden",             "ru": "12 часов"},
+            "1 Day":                {"en": "1 Day",                 "de": "1 Tag",                  "ru": "1 день"},
+            "2 Days":               {"en": "2 Days",                "de": "2 Tage",                 "ru": "2 дня"},
+            "3 Days":               {"en": "3 Days",                "de": "3 Tage",                 "ru": "3 дня"},
+            "7 Days":               {"en": "7 Days",                "de": "7 Tage",                 "ru": "7 дней"},
+            "14 Days":              {"en": "14 Days",               "de": "14 Tage",                "ru": "14 дней"},
+            "1 Month":              {"en": "1 Month",               "de": "1 Monat",                "ru": "1 месяц"},
+            "2 Months":             {"en": "2 Months",              "de": "2 Monate",               "ru": "2 месяца"},
+            "3 Months":             {"en": "3 Months",              "de": "3 Monate",               "ru": "3 месяца"},
+            "6 Months":             {"en": "6 Months",              "de": "6 Monate",               "ru": "6 месяцев"},
+            "1 Year":               {"en": "1 Year",                "de": "1 Jahr",                 "ru": "1 год"},
+            "2 Years":              {"en": "2 Years",               "de": "2 Jahre",                "ru": "2 года"},
+            "Width:":               {"en": "Width:",                "de": "Breite:",                "ru": "Ширина:"},
+            "Height:":              {"en": "Height:",               "de": "Höche:",                 "ru": "Выстоа:"},
+            "Chart type:":          {"en": "Chart type:",           "de": "Charttyp:",              "ru": "Тип графика:"},
             "Line":                 {"en": "Line",                  "de": "Linie",                  "ru": "Линия"},
             "Area":                 {"en": "Area",                  "de": "Area",                   "ru": "Область"},
             "Bar":                  {"en": "Bar",                   "de": "Bar",                    "ru": "Bar"},
-            "Line plot":            {"en": "Line plot",             "de": "Line plot",              "ru": "Линия с точками"},
+            "Line plot":            {"en": "Line plot",             "de": "Linie mit Punkten",      "ru": "Линия с точками"},
             "Scatter plot":         {"en": "Scatter plot",          "de": "Scatter plot",           "ru": "Точки"},
             "Stack":                {"en": "Stack",                 "de": "Stack",                  "ru": "Stack"},
-            "Show axis bottom:":    {"en": "Show axis bottom:",     "de": "Show axis bottom:",      "ru": "Показать нижнюю ось:"},
-            "Show axis left:":      {"en": "Show axis left:",       "de": "Show axis left:",        "ru": "Показать ось слева:"},
-            "Show axis right:":     {"en": "Show axis right:",      "de": "Show axis right:",       "ru": "Показать ось справа:"},
-            "Show legend:":         {"en": "Show legend:",          "de": "Show legend:",           "ru": "Показать легенду:"},
-            "Title:":               {"en": "Title:",                "de": "Title:",                 "ru": "Название:"},
-            "Title position:":      {"en": "Title position:",       "de": "Title position:",        "ru": "Позиция названия:"},
+            "Show axis bottom:":    {"en": "Show axis bottom:",     "de": "Zeige Axe unten:",       "ru": "Показать нижнюю ось:"},
+            "Show axis left:":      {"en": "Show axis left:",       "de": "Zeige Axe links:",       "ru": "Показать ось слева:"},
+            "Show axis right:":     {"en": "Show axis right:",      "de": "Zeige Axe rechts:",      "ru": "Показать ось справа:"},
+            "Show legend:":         {"en": "Show legend:",          "de": "Zeige Legende:",         "ru": "Показать легенду:"},
+            "Title:":               {"en": "Title:",                "de": "Beschriftung:",          "ru": "Название:"},
+            "Title position:":      {"en": "Title position:",       "de": "B. Position:",           "ru": "Позиция названия:"},
             "Top, left, inside":    {"en": "Top, left, inside",     "de": "Top, left, inside",      "ru": "Сверху, слева, внутри"},
             "Top, right, inside":   {"en": "Top, right, inside",    "de": "Top, right, inside",     "ru": "Сверху, справа, внутри"},
             "Top, center, inside":  {"en": "Top, center, inside",   "de": "Top, center, inside",    "ru": "Сверху, по центру, внутри"},
@@ -276,11 +284,11 @@
             "User defined names:":  {"en": "User defined names:",   "de": "User defined names:",    "ru": "Задать имена графиков:"},
             "Predefined background:": {"en": "Predefined background:", "de": "Predefined background:", "ru": "Выбрать фон:"},
             "User defined":         {"en": "User defined",          "de": "User defined",           "ru": "Пользовательские"},
-            "Background:":          {"en": "Background:",           "de": "Background:",            "ru": "Фон:"},
+            "Background:":          {"en": "Background:",           "de": "Hintergrund:",           "ru": "Фон:"},
             "Palette:":             {"en": "Palette:",              "de": "Palette:",               "ru": "Палитра:"},
-            "Line thick:":          {"en": "Line thick:",           "de": "Line thick:",            "ru": "Тольщина линии:"},
+            "Line thick:":          {"en": "Line thick:",           "de": "Liniebreite:",           "ru": "Тольщина линии:"},
             "Hover details:":       {"en": "Hover details:",        "de": "Hover details:",         "ru": "Показывать подсказку:"},
-            "Time format:":         {"en": "Time format:",          "de": "Time format:",           "ru": "Формат времени:"},
+            "Time format:":         {"en": "Time format:",          "de": "Zeitformat:",           "ru": "Формат времени:"},
             "Default":              {"en": "Default",               "de": "Default",                "ru": "по умолчанию"},
             "Smoothing:":           {"en": "Smoothing:",            "de": "Smoothing:",             "ru": "Сглаживание:"},
             "Interpolation:":       {"en": "Interpolation:",        "de": "Interpolation:",         "ru": "Интерполяция:"},
@@ -290,9 +298,9 @@
             "cardinal":             {"en": "cardinal",              "de": "cardinal",               "ru": "cardinal"},
             "basis":                {"en": "basis",                 "de": "basis",                  "ru": "basis"},
             "Preview:":             {"en": "Preview:",              "de": "Preview:",               "ru": "Изменение интервала:"},
-            "After comma:":         {"en": "After comma:",          "de": "After comma:",           "ru": "Чисел после запятой:"},
-            "Open":                 {"en": "Open",                  "de": "Open",                   "ru": "Показать"},
-            "Reset settings":       {"en": "Reset settings",        "de": "Reset settings",         "ru": "Сбросить настройки"},
+            "After comma:":         {"en": "After comma:",          "de": "Nach Komma:",            "ru": "Чисел после запятой:"},
+            "Open":                 {"en": "Open",                  "de": "Zeige",                  "ru": "Показать"},
+            "Reset settings":       {"en": "Reset settings",        "de": "Reset Einstellungen",    "ru": "Сбросить настройки"},
             "Select":               {"en": "Select",                "de": "Auswählen",              "ru": "Выбрать"},
             "Cancel":               {"en": "Cancel",                "de": "Abbrechen",              "ru": "Отмена"},
             "All":                  {"en": "All",                   "de": "Alle",                   "ru": "все"},
@@ -321,7 +329,15 @@
             "Outside/ With lines":  {"en": "Outside/ With lines",   "de": "Outside/ With lines",    "ru": "Снаружи/ С линиями"},
             "Inside / No lines":    {"en": "Inside / No lines",     "de": "Inside / No lines",      "ru": "Внутри / Без линий"},
             "Outside / No lines":   {"en": "Outside / No lines",    "de": "Outside / No lines",     "ru": "Снаружи / Без линий"},
-			"History instance:": 	{"en": "History instance:", 	"de": "History-Instanz:", 		"ru": "Источник:"}
+			"History instance:": 	{"en": "History instance:", 	"de": "History-Instanz:", 		"ru": "Источник:"},
+			"Aggregate:":           {"en": "Aggregate:",            "de": "Aggregation:",           "ru": "Объединение данных:"},
+			"minmax":               {"en": "minmax",                "de": "minmax",                 "ru": "minmax"},
+			"average":              {"en": "average",               "de": "mittel",                 "ru": "среднее"},
+			"max":                  {"en": "max",                   "de": "max",                    "ru": "макс"},
+			"min":                  {"en": "min",                   "de": "min",                    "ru": "мин"},
+			"total":                {"en": "total",                 "de": "total",                  "ru": "всего"},
+			"onchange":             {"en": "on change",             "de": "bei Änderung",           "ru": "при изменении"},
+			"Counts:":              {"en": "Point counts:",         "de": "Anzahl Werten:",         "ru": "Кол-во значений:"}
 		};
 
 		var ids =       [];
@@ -342,10 +358,13 @@
             },
 			noMultiselect: true,
             connCfg: {
-                socketUrl:     socketUrl,
-                socketSession: socketSession,
-                socketName:    'rickshawEdit'
-            },
+                socketUrl:     		socketUrl,
+                socketSession: 		socketSession,
+                socketName:    		'rickshawEdit',
+				upgrade:            typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+				rememberUpgrade:    typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets  : undefined,
+				transports:         typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
+			},
             columns: ['name', 'role', 'room', 'value'],
             texts: {
                 select:   _('Select'),
@@ -581,7 +600,10 @@
 		var socket = io.connect(socketUrl, {
 			'query':                        'key=' + socketSession,
 			'reconnection limit':           10000,
-			'max reconnection attempts':    Infinity
+			'max reconnection attempts':    Infinity,
+			upgrade:                        typeof socketForceWebSockets !== 'undefined' ? !socketForceWebSockets : undefined,
+			rememberUpgrade:                typeof socketForceWebSockets !== 'undefined' ? socketForceWebSockets  : undefined,
+			transports:                     typeof socketForceWebSockets !== 'undefined' ? (socketForceWebSockets ? ['websocket'] : undefined) : undefined
 		});
 
 		socket.on('connect', function () {
@@ -606,7 +628,7 @@
 				for (var t = 0; t < instances.length; t++) {
 					textInstances += '<option value="' + instances[t] + '">' + instances[t] + '</option>\n';
 				}
-				$('#instance').html(textInstances).val(options.instance);
+				if (options) $('#instance').html(textInstances).val(options.instance);
 
 				showIds(function () {
 					showNames();

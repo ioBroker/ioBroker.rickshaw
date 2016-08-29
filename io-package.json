@@ -3,6 +3,11 @@
         "name":         "rickshaw",
         "version":      "0.4.2",
         "news": {
+            "0.4.3": {
+                "en":               "add aggregate type and number of intervals",
+                "de":               "Aggregatetyp und Anzahl von Intervalls hinzugefügt",
+                "ru":               "Добавлен тип агрегации и число интервалов"
+            },
 			"0.4.2": {
                 "en":               "support of web-sockets force",
                 "de":               "support of web-sockets force",

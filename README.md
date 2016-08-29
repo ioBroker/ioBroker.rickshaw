@@ -18,6 +18,9 @@ Draw charts with [rickshaw](http://code.shutterstock.com/rickshaw/examples/).
 - Go to http://ip:8082/rickshaw/edit.html
 
 ## Changelog
+### 0.4.3 (2016-08-29)
+* (bluefox) add aggregate type and number of intervals
+
 ### 0.4.2 (2016-08-14)
 * (bluefox) support of web-sockets force
 

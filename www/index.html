@@ -130,6 +130,7 @@ socket.on('stateChange', function (changeId, state) {
         }
     }
 });
+
 socket.on('connect', function () {
     socket.emit('name', 'rickshaw');
     //console.log('connect');
@@ -140,6 +141,7 @@ socket.on('connect', function () {
     }
     readData();
 });
+
 socket.on('disconnect', function () {
     //console.log('disconnect');
     if (!disconnectTimeout) {
@@ -170,7 +172,7 @@ function readOneChart(id, index, callback) {
             start:      start,
             end:        end,
             aggregate:  config.aggregate || 'minmax',
-            count:      200,
+            count:      parseInt(config.count, 10) || 200,
             instance:   config.instance || undefined
         }, function (err, res) {
             if (err) window.alert(err);
@@ -294,7 +296,7 @@ function buildGraph() {
     graph.render();
 
     if (config.hoverDetail && config.hoverDetail !== 'false') {
-        var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+        var hoverDetail = new Rickshaw.Graph.HoverDetail({
             graph: graph,
             xFormatter: function(x) {
                 return d3.time.format(config.timeFormat)(new Date(x * 1000));
@@ -307,7 +309,7 @@ function buildGraph() {
                     return y.toFixed(config.afterComma);
                 }
             }
-        } );
+        });
         // Overwrite formatter to add own units
         hoverDetail.formatter = function(series, x, y, formattedX, formattedY, d) {
             var pos = config._names.indexOf(series.name);
