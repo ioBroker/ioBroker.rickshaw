@@ -1,9 +1,9 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.4.3",
+        "version":      "0.4.4",
         "news": {
-            "0.4.3": {
+            "0.4.4": {
                 "en":               "add aggregate type and number of intervals",
                 "de":               "Aggregatetyp und Anzahl von Intervalls hinzugefügt",
                 "ru":               "Добавлен тип агрегации и число интервалов"
