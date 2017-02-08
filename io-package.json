@@ -1,8 +1,13 @@
 {
     "common": {
         "name":         "rickshaw",
-        "version":      "0.4.4",
+        "version":      "0.4.5",
         "news": {
+            "0.4.5": {
+                "en":               "fix russian translations",
+                "de":               "Korrigiere russische Übersetzung",
+                "ru":               "Исправлен перевод на русский"
+            },
             "0.4.4": {
                 "en":               "add aggregate type and number of intervals",
                 "de":               "Aggregatetyp und Anzahl von Intervalls hinzugefügt",
