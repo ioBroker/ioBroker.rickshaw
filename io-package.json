@@ -1,57 +1,61 @@
 {
     "common": {
-        "name":         "rickshaw",
-        "version":      "0.4.5",
+        "name": "rickshaw",
+        "version": "0.4.5",
         "news": {
             "0.4.5": {
-                "en":               "fix russian translations",
-                "de":               "Korrigiere russische Übersetzung",
-                "ru":               "Исправлен перевод на русский"
+                "en": "fix russian translations",
+                "de": "Korrigiere russische Übersetzung",
+                "ru": "Исправлен перевод на русский"
             },
             "0.4.4": {
-                "en":               "add aggregate type and number of intervals",
-                "de":               "Aggregatetyp und Anzahl von Intervalls hinzugefügt",
-                "ru":               "Добавлен тип агрегации и число интервалов"
+                "en": "add aggregate type and number of intervals",
+                "de": "Aggregatetyp und Anzahl von Intervalls hinzugefügt",
+                "ru": "Добавлен тип агрегации и число интервалов"
             },
-			"0.4.2": {
-                "en":               "support of web-sockets force",
-                "de":               "support of web-sockets force",
-                "ru":               "support of web-sockets force"
+            "0.4.2": {
+                "en": "support of web-sockets force",
+                "de": "support of web-sockets force",
+                "ru": "support of web-sockets force"
             },
-			"0.4.1": {
-                "en":               "change default aggregation name",
-                "de":               "change default aggregation name",
-                "ru":               "change default aggregation name"
+            "0.4.1": {
+                "en": "change default aggregation name",
+                "de": "change default aggregation name",
+                "ru": "change default aggregation name"
             }
         },
-        "title":        "Rickshaw Charts",
-        "desc":         {
+        "title": "Rickshaw Charts",
+        "desc": {
             "en": "This adapter draws charts with Rickshaw in ioBroker.",
             "de": "Adapter benutzt Rickshaw-Module um Grafiken zu zeichnen.",
             "ru": "Драйвер строит графики с помощью Rickshaw"
         },
-
         "authors": [
             "bluefox <dogafox@gmail.com.io>"
         ],
-        "platform":     "javascript/Node.js",
-        "icon":         "rickshaw.png",
-        "mode":         "none",
-        "keywords":     ["charts", "graphics", "grafiken"],
-        "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
-        "readme":       "https://github.com/ioBroker/ioBroker.rickshaw/blob/master/README.md",
-        "loglevel":     "info",
-        "dependencies": [{"web": ">=1.5.4"}],
-        "localLink":    "%web_protocol%://%ip%:%web_port%/rickshaw/edit.html",
-        "enabled":      true,
-        "onlyWWW":      true,
-        "singleton":    true,
-		"type":         "visualisation",
-		"noConfig":     true
+        "platform": "javascript/Node.js",
+        "icon": "rickshaw.png",
+        "mode": "none",
+        "keywords": [
+            "charts",
+            "graphics",
+            "grafiken"
+        ],
+        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
+        "readme": "https://github.com/ioBroker/ioBroker.rickshaw/blob/master/README.md",
+        "loglevel": "info",
+        "dependencies": [
+            {
+                "web": ">=1.5.4"
+            }
+        ],
+        "localLink": "%web_protocol%://%ip%:%web_port%/rickshaw/edit.html",
+        "enabled": true,
+        "onlyWWW": true,
+        "singleton": true,
+        "type": "visualization",
+        "noConfig": true
     },
-    "native": {
-
-    },
-    "objects": [
-    ]
+    "native": {},
+    "objects": []
 }
