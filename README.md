@@ -8,7 +8,7 @@ ioBroker.rickshaw
 [![NPM](https://nodei.co/npm/iobroker.rickshaw.png?downloads=true)](https://nodei.co/npm/iobroker.rickshaw/)
 
 
-Draw charts with [rickshaw](http://code.shutterstock.com/rickshaw/examples/).
+Draw charts with [rickshaw](https://shutterstock.github.io/rickshaw/examples/).
 
 ## How to use
 - install "socketio"-adapter and create one instance
