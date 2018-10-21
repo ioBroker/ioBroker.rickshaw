@@ -226,7 +226,7 @@
 	<script>
         'use strict';
 
-        systemDictionary = {
+        var systemDictionary = {
             "Input data":           {"en": "Input data",            "de": "Eingabedaten",          "ru": "Входные данные"},
             "Legend and Axes":      {"en": "Legend and Axes",       "de": "Legende und Achsen",       "ru": "Легенда и оси"},
             "Names":                {"en": "Names",                 "de": "Namen",                  "ru": "Имена графиков"},
@@ -417,7 +417,7 @@
                         $('#ids_' + id).val(newId).trigger('change');
                     });
                 });
-                if (typeof callback == 'function') callback();
+                if (typeof callback === 'function') callback();
 			}, 100);
 		}
 	
@@ -463,7 +463,7 @@
 				//names:    ["Temperature", "Humidity", "Airpressure"],
 			};
 			$('.value').each(function (index) {
-				if ($(this).attr('type') == 'checkbox') {
+				if ($(this).attr('type') === 'checkbox') {
 					config[$(this).attr('id')] = $(this).prop('checked');
 				} else {
 					config[$(this).attr('id')] = encodeURIComponent($(this).val());
@@ -501,7 +501,7 @@
             if (typeof Storage !== 'undefined') {
                 var config = {};
                 $('.value').each(function (index) {
-                    if ($(this).attr('type') == 'checkbox') {
+                    if ($(this).attr('type') === 'checkbox') {
                         config[$(this).attr('id')] = $(this).prop('checked');
                     } else {
                         config[$(this).attr('id')] = $(this).val();
@@ -563,16 +563,16 @@
         var options;
 		// Try to extract options form URL
 		var url = window.location.href;
-		if (url.indexOf('?') != -1) {
+		if (url.indexOf('?') !== -1) {
 			options = {};
 			var parts = url.split('?');
 			var params = parts[1].split('&');
 			for (var p = 0; p < params.length; p++) {
 				parts = params[p].split('=');
 				options[parts[0]] = decodeURIComponent(parts[1]);
-				if (parts[0] == '_ids' || parts[0] == '_names' || parts[0] == '_colors') {
+				if (parts[0] === '_ids' || parts[0] === '_names' || parts[0] === '_colors') {
 					options[parts[0]] = options[parts[0]].split(';');
-					if (parts[0] == '_ids') options.ids_count = options[parts[0]].length;
+					if (parts[0] === '_ids') options.ids_count = options[parts[0]].length;
 				}
 			}
 		} else
@@ -614,7 +614,6 @@
 					if (doc.rows.length === 0) {
 						if (callback) callback ([]);
 					} else {
-						var res = [];
 						for (var i = 0; i < doc.rows.length; i++) {
 							var obj = doc.rows[i].value;
 							if (obj && obj.type === 'instance' && obj.common && obj.common.type === 'storage') {
@@ -648,7 +647,7 @@
 								var $this = $(this);
 								var id = $this.attr('id');
 								if (options[id] !== undefined) {
-									if ($this.attr('type') == 'checkbox') {
+									if ($this.attr('type') === 'checkbox') {
 										$this.prop('checked', !!options[id]);
 									} else {
 										$this.val(options[id]);

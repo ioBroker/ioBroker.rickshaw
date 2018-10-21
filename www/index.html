@@ -228,7 +228,7 @@ function readData() {
         config._ids = _ids;
         for (j = 0; j < config._ids.length; j++) {
             readOneChart(config._ids[j], j, function (_id, _index) {
-                if (_index == config._ids.length - 1) {
+                if (_index === config._ids.length - 1) {
                     buildGraph();
                 }
             });
@@ -377,7 +377,7 @@ function buildGraph() {
         $('#title').html(decodeURIComponent(config.title));
         if (config.title_pos) {
             var parts = config.title_pos.split(';');
-            var css = {}
+            var css = {};
             for(var t = 0; t < parts.length; t++) {
                 var p = parts[t].split(':');
                 // Bottom inside

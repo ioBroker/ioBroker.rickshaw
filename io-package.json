@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "rickshaw",
-        "version": "0.4.5",
+        "version": "1.0.0",
         "news": {
+            "1.0.0": {
+                "en": "Some german translations was corrected",
+                "de": "Einige deutsche Übersetzungen wurden korrigiert",
+                "ru": "Некоторые немецкие переводы были исправлены",
+                "pt": "Algumas traduções alemãs foram corrigidas",
+                "nl": "Sommige Duitse vertalingen zijn gecorrigeerd",
+                "fr": "Quelques traductions en allemand ont été corrigées",
+                "it": "Alcune traduzioni tedesche sono state corrette",
+                "es": "Se corrigieron algunas traducciones al alemán.",
+                "pl": "Niektóre niemieckie tłumaczenia zostały poprawione"
+            },
             "0.4.5": {
                 "en": "fix russian translations",
                 "de": "Korrigiere russische Übersetzung",
@@ -25,10 +36,27 @@
             }
         },
         "title": "Rickshaw Charts",
+        "titleLang": {
+            "en": "Rickshaw Charts",
+            "de": "Rickshaw-Charts",
+            "ru": "Графики Rickshaw",
+            "pt": "Gráficos de Rickshaw",
+            "nl": "Rickshaw-hitlijsten",
+            "fr": "Tableaux de Rickshaw",
+            "it": "Grafici del Rickshaw",
+            "es": "Gráficos de Rickshaw",
+            "pl": "Wykresy Rickshaw"
+        },
         "desc": {
             "en": "This adapter draws charts with Rickshaw in ioBroker.",
             "de": "Adapter benutzt Rickshaw-Module um Grafiken zu zeichnen.",
-            "ru": "Драйвер строит графики с помощью Rickshaw"
+            "ru": "Драйвер строит графики с помощью Rickshaw",
+            "pt": "Este adaptador desenha gráficos com o Rickshaw no ioBroker",
+            "nl": "Deze adapter tekent grafieken met Rickshaw in ioBroker",
+            "fr": "Cet adaptateur dessine des graphiques avec Rickshaw dans ioBroker",
+            "it": "Questo adattatore disegna grafici con Rickshaw in ioBroker",
+            "es": "Este adaptador dibuja gráficos con Rickshaw en ioBroker",
+            "pl": "Ten adapter rysuje wykresy z Rickshaw w programie ioBroker"
         },
         "authors": [
             "bluefox <dogafox@gmail.com.io>"

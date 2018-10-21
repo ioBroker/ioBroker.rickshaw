@@ -18,6 +18,9 @@ Draw charts with [rickshaw](https://shutterstock.github.io/rickshaw/examples/).
 - Go to http://ip:8082/rickshaw/edit.html
 
 ## Changelog
+### 1.0.0 (2018-10-21)
+* (informaniac) fix german translations
+
 ### 0.4.5 (2017-02-08)
 * (bluefox) fix russian translations
 
