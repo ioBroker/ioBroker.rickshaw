@@ -2,7 +2,7 @@
 ioBroker.rickshaw
 =================
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.rickshaw.svg)](https://www.npmjs.com/package/iobroker.rickshaw)
+![Number of Installations](http://iobroker.live/badges/rickshaw-installed.svg) ![Number of Installations](http://iobroker.live/badges/rickshaw-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.rickshaw.svg)](https://www.npmjs.com/package/iobroker.rickshaw)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.rickshaw.svg)](https://www.npmjs.com/package/iobroker.rickshaw)
 
 [![NPM](https://nodei.co/npm/iobroker.rickshaw.png?downloads=true)](https://nodei.co/npm/iobroker.rickshaw/)
