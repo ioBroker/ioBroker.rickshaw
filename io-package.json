@@ -73,6 +73,7 @@
         "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.rickshaw/master/admin/rickshaw.png",
         "readme": "https://github.com/ioBroker/ioBroker.rickshaw/blob/master/README.md",
         "loglevel": "info",
+        "tier": 3,
         "dependencies": [
             {
                 "web": ">=1.5.4"
