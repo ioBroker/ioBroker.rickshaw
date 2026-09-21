@@ -90,3 +90,5 @@ Draw charts with [rickshaw](https://shutterstock.github.io/rickshaw/examples/).
 
 ### 0.0.2 (2014-11-24)
 * (bluefox) usable adapter
+
+[Older changelogs can be found there](CHANGELOG_OLD.md)
