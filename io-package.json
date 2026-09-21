@@ -61,7 +61,10 @@
         "authors": [
             "bluefox <dogafox@gmail.com.io>"
         ],
-        "license": "MIT",
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
         "platform": "javascript/Node.js",
         "icon": "rickshaw.png",
         "mode": "none",
