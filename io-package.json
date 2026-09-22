@@ -86,7 +86,9 @@
         "onlyWWW": true,
         "singleton": true,
         "type": "visualization",
-        "noConfig": true
+        "adminUI": {
+            "config": "none"
+        }
     },
     "native": {},
     "objects": []
