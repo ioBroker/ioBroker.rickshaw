@@ -23,7 +23,7 @@
     "chart"
   ],
   "dependencies": {
-    "@iobroker/adapter-core": "^1.0.3"
+    "@iobroker/adapter-core": "^3.4.3"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
